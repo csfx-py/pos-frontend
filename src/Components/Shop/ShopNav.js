@@ -20,7 +20,7 @@ function ShopNav() {
 
   const checkUser = async () => {
     const res = await checkCookie();
-    if (!res.success || res.role !== "manager") {
+    if (!res.success || res.roles_id !== 2) {
       history.push("/login");
     }
   };
