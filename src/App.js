@@ -8,6 +8,8 @@ import ReDash from "./Components/ReDash";
 import Admin from "./Routes/Admin/Admin";
 import AdminItems from "./Routes/Admin/AdminItems";
 import { MasterDataProvider } from "./Contexts/MasterDataContext";
+import Shop from "./Routes/Shop";
+import { ShopDataProvider } from "./Contexts/ShopDataContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,12 +25,15 @@ function App() {
       <Router>
         {isLoading && <Loading />}
         <MasterDataProvider>
-          <Switch>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/admin" component={Admin} />
-            <Route exact path="/admin/items" component={AdminItems} />
-            <Route path="*" component={ReDash} />
-          </Switch>
+          <ShopDataProvider>
+            <Switch>
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/admin" component={Admin} />
+              <Route exact path="/admin/items" component={AdminItems} />
+              <Route exact path="/shop" component={Shop} />
+              <Route path="*" component={ReDash} />
+            </Switch>
+          </ShopDataProvider>
         </MasterDataProvider>
       </Router>
     </div>
