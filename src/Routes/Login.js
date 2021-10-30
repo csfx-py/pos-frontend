@@ -67,13 +67,14 @@ function Login() {
       try {
         const res = await login(name, password);
         setCredentials({ name: "", password: "" });
+        console.log(res.roles_id);
         if (res.success) {
-          switch (res.role) {
-            case "admin":
+          switch (res.roles_id) {
+            case 1:
               setIsLoading(false);
               history.push("/admin");
               break;
-            case "shop":
+            case 2:
               setIsLoading(false);
               history.push("/shop");
               break;
