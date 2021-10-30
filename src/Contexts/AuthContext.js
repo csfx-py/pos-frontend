@@ -14,15 +14,18 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await API.post("/auth/login", { name, password });
       if (res.status === 200 && res.data) {
-        const { name, role, is_priviledged } = jwt_decode(res.data);
+        const { name, roles_id, is_priviledged, shops_id } = jwt_decode(
+          res.data
+        );
         setUser({
           name,
-          role,
+          roles_id,
           is_priviledged,
+          shops_id,
           token: res.data,
         });
         Cookie.set("sid", res.data);
-        return { success: true, role: role };
+        return { success: true, roles_id };
       }
       toast(res.data);
       return { success: false };
@@ -44,15 +47,18 @@ export const AuthProvider = ({ children }) => {
       const res = await API.post("/auth/refresh");
       if (res && res.data) {
         console.log(jwt_decode(res.data));
-        const { name, role, is_priviledged } = jwt_decode(res.data);
+        const { name, roles_id, is_priviledged, shops_id } = jwt_decode(
+          res.data
+        );
         setUser({
           name,
-          role,
+          roles_id,
           is_priviledged,
+          shops_id,
           token: res.data,
         });
         Cookie.set("sid", res.data);
-        return { success: true, token: res.data, };
+        return { success: true, token: res.data, shops_id };
       }
       toast("session expired", "error");
       setIsLoading(false);
@@ -68,15 +74,16 @@ export const AuthProvider = ({ children }) => {
     const cookie = Cookie.get("sid");
 
     if (cookie) {
-      const { name, role, is_priviledged, exp } = await jwt_decode(cookie);
+      const { name, roles_id, is_priviledged, shops_id, exp } =
+        await jwt_decode(cookie);
       if (Date.now() >= exp * 1000) {
         setUser({});
         Cookie.remove("sid");
         toast("Session expired", "error");
         return false;
       }
-      setUser({ name, role, is_priviledged, token: cookie });
-      return { success: true, role: role };
+      setUser({ name, roles_id, is_priviledged, shops_id, token: cookie });
+      return { success: true, roles_id };
     }
     setUser({});
     return { success: false };
