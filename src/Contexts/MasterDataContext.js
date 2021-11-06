@@ -21,8 +21,7 @@ export const MasterDataProvider = ({ children }) => {
       const res = await API.get("/master/items/brand");
 
       if (res.status === 200 && res.data.length > 0) {
-        const newData = res.data.map((datum) => datum.name);
-        setBrands([...newData]);
+        setBrands([...res.data]);
         return;
       }
       toast(res.data);
@@ -37,8 +36,7 @@ export const MasterDataProvider = ({ children }) => {
       const res = await API.get("/master/items/category");
 
       if (res.status === 200 && res.data.length > 0) {
-        const newData = res.data.map((datum) => datum.name);
-        setCategories([...newData]);
+        setCategories([...res.data]);
         return;
       }
       toast(res.data);
@@ -53,8 +51,7 @@ export const MasterDataProvider = ({ children }) => {
       const res = await API.get("/master/items/size");
 
       if (res.status === 200 && res.data.length > 0) {
-        const newData = res.data.map((datum) => datum.size);
-        setSizes([...newData]);
+        setSizes([...res.data]);
         return;
       }
       toast(res.data);
@@ -69,7 +66,6 @@ export const MasterDataProvider = ({ children }) => {
       const res = await API.get("/master/items/items");
 
       if (res.status === 200 && res.data.length > 0) {
-        console.log(res.data);
         setItems([...res.data]);
         return true;
       }
@@ -152,6 +148,56 @@ export const MasterDataProvider = ({ children }) => {
     }
   };
 
+  const addItem = async (item) => {
+    console.log(item);
+    const {
+      name,
+      categories_id,
+      sizes_id,
+      purchase_price,
+      case_qty,
+      case_price,
+      mrp,
+    } = item;
+    const brands_id = item.brands_id === "" ? null : item.brands_id;
+    const barcode = item.barcode === "" ? null : item.barcode;
+    const mrp1 = item.mrp1 === 0 ? null : item.mrp1;
+    const mrp2 = item.mrp2 === 0 ? null : item.mrp2;
+    const mrp3 = item.mrp3 === 0 ? null : item.mrp3;
+    const mrp4 = item.mrp4 === 0 ? null : item.mrp4;
+    try {
+      const { success } = await refresh();
+      if (success) {
+        const res = await API.post("master/items/products", {
+          name,
+          categories_id,
+          sizes_id,
+          brands_id,
+          barcode,
+          purchase_price,
+          case_qty,
+          case_price,
+          mrp,
+          mrp1,
+          mrp2,
+          mrp3,
+          mrp4,
+        });
+        if (res && res.data) {
+          toast(name + " added", "success");
+          setChangesMade(changesMade + 1);
+          return true;
+        }
+        toast(res.data);
+        return false;
+      }
+      return false;
+    } catch (error) {
+      toast(error.response.data, "error");
+      return false;
+    }
+  };
+
   const addBulk = async (items) => {
     try {
       const { success } = await refresh();
@@ -183,6 +229,7 @@ export const MasterDataProvider = ({ children }) => {
         addBrand,
         addCategory,
         addSize,
+        addItem,
         addBulk,
       }}
     >
