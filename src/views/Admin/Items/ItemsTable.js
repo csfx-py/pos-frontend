@@ -15,12 +15,12 @@ const useStyles = makeStyles((theme) => ({
 
 const columns = [
   {
-    id: "item_name",
+    id: "name",
     label: "Name",
     minWidth: 120,
   },
   {
-    id: "category",
+    id: "categories_name",
     label: "Category",
     minWidth: 50,
   },
@@ -32,7 +32,7 @@ const columns = [
     format: (value) => value.toLocaleString("en-IN"),
   },
   {
-    id: "brand",
+    id: "brands_name",
     label: "Brand",
     minWidth: 60,
   },
@@ -97,9 +97,9 @@ function ItemsTable() {
     const filteredData = items.filter((item) => {
       const { category, size, brand } = filter;
       return (
-        (category === "" || item.category === category) &&
+        (category === "" || item.categories_name === category) &&
         (size === "" || item.size === size) &&
-        (brand === "" || item.brand === brand)
+        (brand === "" || item.brands_name === brand)
       );
     });
     setRows(filteredData);
@@ -108,6 +108,7 @@ function ItemsTable() {
   return (
     <Grid container direction="column">
       <Grid item xs={12}>
+        {console.log(items)}
         <Paper elevation={2} className={classes.paper}>
           <Typography variant="h5" component="h2">
             Filter
