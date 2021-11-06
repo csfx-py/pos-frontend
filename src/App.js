@@ -8,8 +8,9 @@ import ReDash from "./Components/ReDash";
 import Admin from "./Routes/Admin/Admin";
 import AdminItems from "./Routes/Admin/AdminItems";
 import { MasterDataProvider } from "./Contexts/MasterDataContext";
-import Shop from "./Routes/Shop";
+import Shop from "./Routes/Shop/Shop";
 import { ShopDataProvider } from "./Contexts/ShopDataContext";
+import ShopItems from "./Routes/Shop/ShopItems";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +33,11 @@ function App() {
             <Route exact path="/shop">
               <ShopDataProvider>
                 <Shop />
+              </ShopDataProvider>
+            </Route>
+            <Route exact path="/shop/items">
+              <ShopDataProvider>
+                <ShopItems />
               </ShopDataProvider>
             </Route>
             <Route path="*" component={ReDash} />
