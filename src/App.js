@@ -25,15 +25,17 @@ function App() {
       <Router>
         {isLoading && <Loading />}
         <MasterDataProvider>
-          <ShopDataProvider>
-            <Switch>
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/admin" component={Admin} />
-              <Route exact path="/admin/items" component={AdminItems} />
-              <Route exact path="/shop" component={Shop} />
-              <Route path="*" component={ReDash} />
-            </Switch>
-          </ShopDataProvider>
+          <Switch>
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/admin" component={Admin} />
+            <Route exact path="/admin/items" component={AdminItems} />
+            <Route exact path="/shop">
+              <ShopDataProvider>
+                <Shop />
+              </ShopDataProvider>
+            </Route>
+            <Route path="*" component={ReDash} />
+          </Switch>
         </MasterDataProvider>
       </Router>
     </div>
