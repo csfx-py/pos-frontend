@@ -16,12 +16,12 @@ function Home() {
       history.push("/login");
       return;
     }
-    switch (res.role) {
-      case "admin":
+    switch (res.roles_id) {
+      case 1:
         setIsLoading(false);
         history.push("/admin");
         break;
-      case "shop":
+      case 2:
         setIsLoading(false);
         history.push("/shop");
         break;
