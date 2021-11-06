@@ -34,35 +34,35 @@ function AdminDrawer({ handleDrawer }) {
     >
       <List>
         <ListItem>
-          <ListItemText primary={`User: ${user.user_name}`} />
+          <ListItemText primary={`User: ${user.name}`} />
         </ListItem>
         <ListItem>
-          <Link to="/manager">
+          <Link to="/shop">
             <ListItemText primary="Sell" />
           </Link>
         </ListItem>
         <ListItem>
-          <Link to="/manager/items">
+          <Link to="/shop/items">
             <ListItemText primary="Items" />
           </Link>
         </ListItem>
-        {user.user_is_manager && (
+        {user.is_priviledged && (
           <ListItem>
-            <Link to="/manager/sell-bulk">
+            <Link to="/shop/sell-bulk">
               <ListItemText primary="Bulk Sell" />
             </Link>
           </ListItem>
         )}
-        {user.user_is_manager && (
+        {user.is_priviledged && (
           <ListItem>
-            <Link to="/manager/purchase">
+            <Link to="/shop/purchase">
               <ListItemText primary="Purchase" />
             </Link>
           </ListItem>
         )}
-        {user.user_is_manager && (
+        {user.is_priviledged && (
           <ListItem>
-            <Link to="/manager/reports">
+            <Link to="/shop/reports">
               <ListItemText primary="Reports" />
             </Link>
           </ListItem>
