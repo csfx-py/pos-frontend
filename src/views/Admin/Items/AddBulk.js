@@ -56,14 +56,14 @@ function AddBulk() {
       dataRows.push(
         data.map((datum) => {
           const newRow = {};
-          newRow.item_name = datum[0];
+          newRow.name = datum[0];
           newRow.category = datum[1];
           newRow.brand = datum[2] || null;
           newRow.barcode = datum[3] || null;
           newRow.size = datum[4];
           newRow.purchase_price = datum[5];
           newRow.case_qty = datum[6];
-          newRow.case_price = datum[7] || null;
+          newRow.case_price = datum[7];
           newRow.mrp = datum[8];
           newRow.mrp1 = datum[9] || null;
           newRow.mrp2 = datum[10] || null;
