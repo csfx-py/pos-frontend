@@ -8,10 +8,10 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useContext, useRef, useState } from "react";
-import { UtilityContext } from "../Contexts/UtilityContext";
-import { ShopDataContext } from "../Contexts/ShopDataContext";
-import ShopNav from "../Components/Shop/ShopNav";
-import EditTable from "../Components/EditTable";
+import { UtilityContext } from "../../Contexts/UtilityContext";
+import { ShopDataContext } from "../../Contexts/ShopDataContext";
+import ShopNav from "../../Components/Shop/ShopNav";
+import EditTable from "../../Components/EditTable";
 
 const columns = [
   {
