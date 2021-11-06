@@ -22,7 +22,8 @@ export const MasterDataProvider = ({ children }) => {
 
       if (res.status === 200 && res.data.length > 0) {
         const newData = res.data.map((datum) => datum.name);
-        return setBrands([...newData]);
+        setBrands([...newData]);
+        return;
       }
       toast(res.data);
     } catch (error) {
@@ -37,7 +38,8 @@ export const MasterDataProvider = ({ children }) => {
 
       if (res.status === 200 && res.data.length > 0) {
         const newData = res.data.map((datum) => datum.name);
-        return setCategories([...newData]);
+        setCategories([...newData]);
+        return;
       }
       toast(res.data);
     } catch (error) {
@@ -52,7 +54,8 @@ export const MasterDataProvider = ({ children }) => {
 
       if (res.status === 200 && res.data.length > 0) {
         const newData = res.data.map((datum) => datum.size);
-        return setSizes([...newData]);
+        setSizes([...newData]);
+        return;
       }
       toast(res.data);
     } catch (error) {
@@ -149,6 +152,27 @@ export const MasterDataProvider = ({ children }) => {
     }
   };
 
+  const addBulk = async (items) => {
+    try {
+      const { success } = await refresh();
+      if (success) {
+        const res = await API.post("/master/items/xl-products", items);
+        if (res && res.data) {
+          console.log(res.data);
+          toast("Bulk added, for results press F12", "success");
+          setChangesMade(changesMade + 1);
+          return true;
+        }
+        toast(res.data);
+        return false;
+      }
+      return false;
+    } catch (error) {
+      toast(error.response.data, "error");
+      return false;
+    }
+  };
+
   return (
     <MasterDataContext.Provider
       value={{
@@ -159,6 +183,7 @@ export const MasterDataProvider = ({ children }) => {
         addBrand,
         addCategory,
         addSize,
+        addBulk,
       }}
     >
       {children}
