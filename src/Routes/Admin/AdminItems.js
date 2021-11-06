@@ -7,7 +7,7 @@ import AddBrand from "../../views/Admin/Items/AddBrand";
 import AddCategory from "../../views/Admin/Items/AddCategory";
 import AddSize from "../../views/Admin/Items/AddSize";
 // import AddItem from "../../Components/Admin/Items/AddItem";
-// import AddBulk from "../../Components/Admin/Items/AddBulk";
+import AddBulk from "../../views/Admin/Items/AddBulk";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,7 +52,7 @@ function AdminItems() {
         {/* <AddItem /> */}
       </TabPanel>
       <TabPanel value={value} index={5}>
-        {/* <AddBulk /> */}
+        <AddBulk />
       </TabPanel>
     </div>
   );
