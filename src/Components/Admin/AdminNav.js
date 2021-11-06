@@ -20,7 +20,7 @@ function AdminNav() {
 
   const checkUser = async () => {
     const res = await checkCookie();
-    if (!res.success || res.role !== "admin") {
+    if (!res.success || res.roles_id !== 1) {
       history.push("/login");
     }
   };
