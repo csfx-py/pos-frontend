@@ -108,7 +108,6 @@ function ItemsTable() {
   return (
     <Grid container direction="column">
       <Grid item xs={12}>
-        {console.log(items)}
         <Paper elevation={2} className={classes.paper}>
           <Typography variant="h5" component="h2">
             Filter

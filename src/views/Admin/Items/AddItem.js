@@ -27,10 +27,10 @@ function AddItem() {
   const { setIsLoading } = useContext(UtilityContext);
   const { addItem, categories, sizes, brands } = useContext(MasterDataContext);
   const [formControlState, setFormControlState] = useState({
-    item_name: "",
-    category: categories[0],
-    size: sizes[0],
-    brand: brands[0],
+    name: "",
+    categories_id: categories[0].id,
+    sizes_id: sizes[0].id,
+    brands_id: "",
     barcode: "",
     purchase_price: 0,
     case_qty: 0,
@@ -54,10 +54,10 @@ function AddItem() {
     setIsLoading(true);
     await addItem(formControlState);
     setFormControlState({
-      item_name: "",
-      category: categories[0],
-      size: sizes[0],
-      brand: brands[0],
+      name: "",
+      categories_id: categories[0].id,
+      sizes_id: sizes[0].id,
+      brands_id: "",
       barcode: "",
       purchase_price: 0,
       case_qty: 0,
@@ -81,8 +81,8 @@ function AddItem() {
           <Grid item xs={3}>
             <TextField
               label="Item Name"
-              value={formControlState.item_name}
-              name="item_name"
+              value={formControlState.name}
+              name="name"
               onChange={handleChange}
               color="secondary"
               fullWidth
@@ -94,14 +94,14 @@ function AddItem() {
             <Select
               color="secondary"
               name="category"
-              value={formControlState.category}
+              value={formControlState.categories_id}
               onChange={handleChange}
               fullWidth
               required
             >
               {categories.map((category) => (
-                <MenuItem key={category} value={category}>
-                  {category}
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
                 </MenuItem>
               ))}
             </Select>
@@ -111,15 +111,15 @@ function AddItem() {
             <InputLabel color="secondary">Size</InputLabel>
             <Select
               color="secondary"
-              name="size"
-              value={formControlState.size}
+              name="sizes_id"
+              value={formControlState.sizes_id}
               onChange={handleChange}
               fullWidth
               required
             >
               {sizes.map((size) => (
-                <MenuItem key={size} value={size}>
-                  {size}
+                <MenuItem key={size.id} value={size.id}>
+                  {size.size}
                 </MenuItem>
               ))}
             </Select>
@@ -129,15 +129,15 @@ function AddItem() {
             <InputLabel color="secondary">Brand</InputLabel>
             <Select
               color="secondary"
-              name="brand"
-              value={formControlState.brand}
+              value={formControlState.brands_id}
+              name="brands_id"
               onChange={handleChange}
               fullWidth
-              required
             >
+              <MenuItem value="">None</MenuItem>
               {brands.map((brand) => (
-                <MenuItem key={brand} value={brand}>
-                  {brand}
+                <MenuItem key={brand.id} value={brand.id}>
+                  {brand.name}
                 </MenuItem>
               ))}
             </Select>
