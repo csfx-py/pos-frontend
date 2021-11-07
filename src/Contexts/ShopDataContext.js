@@ -139,13 +139,13 @@ export const ShopDataProvider = ({ children }) => {
 
   const addBulk = async (data) => {
     try {
-      const { success, shop } = await refresh();
+      const { success, shops_id } = await refresh();
       if (success) {
         const finalData = data.map((datum) => ({
           ...datum,
-          shop,
+          shops_id: shops_id[0],
         }));
-        const res = await API.post("/shop/bulk", finalData);
+        const res = await API.post("/shop/stock", finalData);
         if (res && res.data) {
           console.log(res.data);
           toast("Bulk added, for results press F12", "success");
