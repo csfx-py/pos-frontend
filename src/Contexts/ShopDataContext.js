@@ -261,36 +261,36 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  const bulkSell = async (data, sales_date) => {
-    try {
-      const { success, shop } = await refresh();
-      console.log(data);
-      // if (success) {
-      //   const finalData = data
-      //     .filter((datum) => datum.sellQty > 0)
-      //     .map((datum) => ({
-      //       sales_date,
-      //       shop,
-      //       item: datum.item,
-      //       price: datum.mrp,
-      //       qty: datum.sellQty,
-      //     }));
+  // const bulkSell = async (data, sales_date) => {
+  //   try {
+  //     const { success, shops_id } = await refresh();
+  //     console.log(data);
+  //     if (success) {
+  //       const finalData = data
+  //         .filter((datum) => datum.sellQty > 0)
+  //         .map((datum) => ({
+  //           sales_date,
+  //           shop,
+  //           item: datum.item,
+  //           price: datum.mrp,
+  //           qty: datum.sellQty,
+  //         }));
 
-      //   const res = await API.post("/shop/bulksell", finalData);
-      //   if (res && res.data) {
-      //     toast("Bulk sold, for results press F12", "success");
-      //     setChangesMade(changesMade + 1);
-      //     return true;
-      //   }
-      //   toast(res.data);
-      //   return false;
-      // }
-      return false;
-    } catch (error) {
-      toast(error.response.data, "error");
-      return false;
-    }
-  };
+  //       const res = await API.post("/shop/bulksell", finalData);
+  //       if (res && res.data) {
+  //         toast("Bulk sold, for results press F12", "success");
+  //         setChangesMade(changesMade + 1);
+  //         return true;
+  //       }
+  //       toast(res.data);
+  //       return false;
+  //     }
+  //     return false;
+  //   } catch (error) {
+  //     toast(error.response.data, "error");
+  //     return false;
+  //   }
+  // };
 
   return (
     <ShopDataContext.Provider
@@ -305,7 +305,7 @@ export const ShopDataProvider = ({ children }) => {
         addBulk,
         qSell,
         tempSold,
-        bulkSell,
+        // bulkSell,
         purchase,
         salesReports,
         purchaseReports,

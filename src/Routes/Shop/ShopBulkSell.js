@@ -1,4 +1,4 @@
-import { createRef, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ShopDataContext } from "../../Contexts/ShopDataContext";
 import {
   Button,
@@ -88,8 +88,6 @@ function ShopBulkSell() {
 
   const [rows, setRows] = useState([]);
 
-  const firsRef = useRef(true);
-
   const handleFilter = (e) => {
     const { value } = e.target;
     setCategory(value);
@@ -154,6 +152,7 @@ function ShopBulkSell() {
     } else {
       reset();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tempSoldItems, category, activeItems]);
 
   const handleSubmit = async (e) => {
