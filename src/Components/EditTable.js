@@ -10,7 +10,9 @@ import {
   TableRow,
   TextField,
 } from "@material-ui/core";
+import { useContext } from "react";
 import { MdDeleteForever } from "react-icons/md";
+import { AuthContext } from "../Contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,8 +26,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CustomCell({ row, column, value, handleChange, handleDelete }) {
+  const { user } = useContext(AuthContext);
   if (column.type) {
-    if (column.type === "input")
+    if (column.type === "input" && column.priviledged && user.is_priviledged)
+      return (
+        <TextField
+          type="number"
+          value={value}
+          name={column.id}
+          onChange={(e) => {
+            handleChange(row, e.target.name, e.target.value);
+          }}
+        />
+      );
+    if (column.type === "input" && !column.priviledged)
       return (
         <TextField
           type="number"
@@ -42,6 +56,7 @@ function CustomCell({ row, column, value, handleChange, handleDelete }) {
           variant="contained"
           color="secondary"
           onClick={(e) => {
+            console.log(row);
             handleDelete(row);
           }}
         >
@@ -82,7 +97,6 @@ function EditTable({ columns, rows, handleChange, handleDelete }) {
                     const value = row[column.id];
                     return (
                       <TableCell key={column.id} align={column.align}>
-                        {console.log(row)}
                         <CustomCell
                           row={row}
                           column={column}
