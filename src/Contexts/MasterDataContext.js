@@ -66,7 +66,18 @@ export const MasterDataProvider = ({ children }) => {
       const res = await API.get("/master/items/items");
 
       if (res.status === 200 && res.data.length > 0) {
-        setItems([...res.data]);
+        const newData = res.data.map((item) => ({
+          ...item,
+          mrp: parseFloat(item.mrp),
+          purchase_price: parseFloat(item.purchase_price),
+          case_price: parseFloat(item.case_price),
+          mrp1: item.mrp1 ? parseFloat(item.mrp1) : 0,
+          mrp2: item.mrp2 ? parseFloat(item.mrp2) : 0,
+          mrp3: item.mrp3 ? parseFloat(item.mrp3) : 0,
+          mrp4: item.mrp4 ? parseFloat(item.mrp4) : 0,
+          discount: parseFloat(item.discount),
+        }));
+        setItems([...newData]);
         return true;
       }
       toast(res.data);
@@ -149,7 +160,6 @@ export const MasterDataProvider = ({ children }) => {
   };
 
   const addItem = async (item) => {
-    console.log(item);
     const {
       name,
       categories_id,
@@ -204,7 +214,6 @@ export const MasterDataProvider = ({ children }) => {
       if (success) {
         const res = await API.post("/master/items/xl-products", items);
         if (res && res.data) {
-          console.log(res.data);
           toast("Bulk added, for results press F12", "success");
           setChangesMade(changesMade + 1);
           return true;
