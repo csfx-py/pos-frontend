@@ -25,16 +25,14 @@ export const ShopDataProvider = ({ children }) => {
           },
         });
 
-        console.log(res.data);
         if (res && res.data?.length > 0) {
-          console.log(res.data);
           const newData = res.data.map((datum) => ({
             ...datum,
             mrp: parseFloat(datum.mrp),
+            purchase_price: parseFloat(datum.purchase_price),
           }));
-          console.log(newData);
           setShopItems([...newData]);
-          setActiveItems(newData.filter((item) => item.qty > 0));
+          setActiveItems(newData.filter((item) => item.stock > 0));
           return true;
         }
 
@@ -147,7 +145,6 @@ export const ShopDataProvider = ({ children }) => {
         }));
         const res = await API.post("/shop/stock", finalData);
         if (res && res.data) {
-          console.log(res.data);
           toast("Bulk added, for results press F12", "success");
           setChangesMade(changesMade + 1);
           return true;
@@ -179,48 +176,23 @@ export const ShopDataProvider = ({ children }) => {
   //   return;
   // };
 
-  // const qSell = async (data, transaction_type) => {
-  //   try {
-  //     const { success, shop } = await refresh();
-  //     if (success) {
-  //       const finalData = data.map((datum) => ({
-  //         item: datum.item,
-  //         qty: datum.sellQty,
-  //         price: datum.price,
-  //         transaction_type,
-  //         shop,
-  //       }));
-  //       const res = await API.post("/qsell", finalData);
-  //       if (res && res.data) {
-  //         toast("Q-Sell added, for results press F12", "success");
-  //         setChangesMade(changesMade + 1);
-  //         console.log(res.data);
-  //         return true;
-  //       }
-  //       toast(res.data);
-  //       return false;
-  //     }
-  //     return false;
-  //   } catch (error) {
-  //     toast(error.response.data, "error");
-  //     return false;
-  //   }
-  // };
-
-  const purchase = async (data, purchase_date) => {
+  const qSell = async (data, transaction_type) => {
     try {
-      const { success, shop } = await refresh();
+      const { success, shops_id, id } = await refresh();
       if (success) {
         const finalData = data.map((datum) => ({
-          item: datum.item,
-          qty: datum.qty,
-          purchase_date,
-          shop,
+          products_id: datum.products_id,
+          qty: datum.sellQty,
+          price: datum.mrp,
         }));
-
-        const res = await API.post("/shop/purchase", finalData);
+        const res = await API.post("/shop/sale", {
+          shops_id: shops_id[0],
+          users_id: id,
+          transaction_type,
+          items: finalData,
+        });
         if (res && res.data) {
-          toast("Processed, for results press F12", "success");
+          toast("Q-Sell added, for results press F12", "success");
           setChangesMade(changesMade + 1);
           console.log(res.data);
           return true;
@@ -235,30 +207,84 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  const bulkSell = async (data, sales_date) => {
+  const purchase = async (data, purchase_date) => {
     try {
-      const { success, shop } = await refresh();
+      const { success, shops_id } = await refresh();
       if (success) {
-        const finalData = data
-          .filter((datum) => datum.sellQty > 0)
-          .map((datum) => ({
-            sales_date,
-            shop,
-            item: datum.item,
-            price: datum.mrp,
-            qty: datum.sellQty,
-          }));
+        const finalData = data.map((datum) => ({
+          shops_id: shops_id[0],
+          products_id: datum.products_id,
+          purchase_date,
+          qty_case: datum.qty_case,
+          qty_item: datum.qty_unit,
+        }));
 
-        const res = await API.post("/shop/bulksell", finalData);
+        console.log(finalData);
+
+        const res = await API.post("/shop/purchase", finalData);
         if (res && res.data) {
-          toast("Bulk sold, for results press F12", "success");
+          toast("Processed, for results press F12", "success");
           setChangesMade(changesMade + 1);
-          console.log(res.data);
           return true;
         }
         toast(res.data);
         return false;
       }
+      return false;
+    } catch (error) {
+      toast(error.response.data, "error");
+      return false;
+    }
+  };
+
+  const tempSold = async (sales_date) => {
+    try {
+      const { success, shops_id } = await refresh();
+      if (success) {
+        const res = await API.get("/shop/temp-sold", {
+          params: {
+            shops_id: shops_id[0],
+            sales_date,
+          },
+        });
+        if (res && res.data) {
+          console.log(res.data);
+          return [...res.data];
+        }
+        toast(res.data);
+        return false;
+      }
+      return false;
+    } catch (error) {
+      toast(error.response.data, "error");
+      return false;
+    }
+  };
+
+  const bulkSell = async (data, sales_date) => {
+    try {
+      const { success, shop } = await refresh();
+      console.log(data);
+      // if (success) {
+      //   const finalData = data
+      //     .filter((datum) => datum.sellQty > 0)
+      //     .map((datum) => ({
+      //       sales_date,
+      //       shop,
+      //       item: datum.item,
+      //       price: datum.mrp,
+      //       qty: datum.sellQty,
+      //     }));
+
+      //   const res = await API.post("/shop/bulksell", finalData);
+      //   if (res && res.data) {
+      //     toast("Bulk sold, for results press F12", "success");
+      //     setChangesMade(changesMade + 1);
+      //     return true;
+      //   }
+      //   toast(res.data);
+      //   return false;
+      // }
       return false;
     } catch (error) {
       toast(error.response.data, "error");
@@ -277,7 +303,8 @@ export const ShopDataProvider = ({ children }) => {
         // activeInvoiceNum,
         // setActiveInvoiceNum,
         addBulk,
-        // qSell,
+        qSell,
+        tempSold,
         bulkSell,
         purchase,
         salesReports,
