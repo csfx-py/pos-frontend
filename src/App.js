@@ -11,6 +11,8 @@ import { MasterDataProvider } from "./Contexts/MasterDataContext";
 import Shop from "./Routes/Shop/Shop";
 import { ShopDataProvider } from "./Contexts/ShopDataContext";
 import ShopItems from "./Routes/Shop/ShopItems";
+import ShopBulkSell from "./Routes/Shop/ShopBulkSell";
+import ShopPurchase from "./Routes/Shop/ShopPurachase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +40,16 @@ function App() {
             <Route exact path="/shop/items">
               <ShopDataProvider>
                 <ShopItems />
+              </ShopDataProvider>
+            </Route>
+            <Route exact path="/shop/sell-bulk">
+              <ShopDataProvider>
+                <ShopBulkSell />
+              </ShopDataProvider>
+            </Route>
+            <Route exact path="/shop/purchase">
+              <ShopDataProvider>
+                <ShopPurchase />
               </ShopDataProvider>
             </Route>
             <Route path="*" component={ReDash} />
