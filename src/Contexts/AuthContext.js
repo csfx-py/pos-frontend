@@ -14,10 +14,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await API.post("/auth/login", { name, password });
       if (res.status === 200 && res.data) {
-        const { name, roles_id, is_priviledged, shops_id } = jwt_decode(
+        const { id, name, roles_id, is_priviledged, shops_id } = jwt_decode(
           res.data
         );
         setUser({
+          id,
           name,
           roles_id,
           is_priviledged,
@@ -46,11 +47,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await API.post("/auth/refresh");
       if (res && res.data) {
-        console.log(jwt_decode(res.data));
-        const { name, roles_id, is_priviledged, shops_id } = jwt_decode(
+        const { id, name, roles_id, is_priviledged, shops_id } = jwt_decode(
           res.data
         );
         setUser({
+          id,
           name,
           roles_id,
           is_priviledged,
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }) => {
           token: res.data,
         });
         Cookie.set("sid", res.data);
-        return { success: true, token: res.data, shops_id };
+        return { success: true, token: res.data, shops_id, id };
       }
       toast("session expired", "error");
       setIsLoading(false);
