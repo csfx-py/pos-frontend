@@ -15,17 +15,18 @@ import EditTable from "../../Components/EditTable";
 
 const columns = [
   {
-    id: "item",
+    id: "products_name",
     label: "Name",
     minWidth: 200,
   },
   {
-    id: "price",
+    id: "mrp",
     label: "MRP",
     minWidth: 50,
+    format: (value) => value.toLocaleString("en-IN"),
   },
   {
-    id: "qty",
+    id: "stock",
     label: "Available Qty",
     minWidth: 50,
     align: "right",
@@ -38,13 +39,14 @@ const columns = [
     align: "right",
     type: "input",
   },
-
   {
     id: "discount",
     label: "Discount",
     minWidth: 50,
     align: "right",
     type: "input",
+    priviledged: true,
+    format: (value) => value.toLocaleString("en-IN"),
   },
   {
     id: "total",
@@ -98,44 +100,45 @@ function Shop() {
 
   //   add items to active invoice
   const handleAdd = async (row) => {
-    try {
-      const newRows = [...rows];
-      console.log(row, newRows);
-      // check if item exists
-      const item = newRows.find((i) => i.item === row.item);
-      if (item) {
-        item.sellQty += row.sellQty;
-        // item.discount += row.discount;
-        item.total += row.total;
-      } else {
-        newRows.push({
-          item: row.item,
-          sellQty: 1,
-          discount: parseFloat(row.discount),
-          qty: parseInt(row.qty),
-          price: parseFloat(row.mrp),
-          total: parseFloat(row.mrp),
-        });
+    if (row)
+      try {
+        const newRows = [...rows];
+        // check if item exists
+        const item = newRows.find((i) => i.products_id === row.products_id);
+        if (item) {
+          item.sellQty += 1;
+          item.total += parseFloat(row.mrp) - parseFloat(row.discount);
+        } else {
+          newRows.push({
+            products_id: row.products_id,
+            products_name: row.products_name,
+            sellQty: 1,
+            discount: parseFloat(row.discount),
+            stock: parseInt(row.stock),
+            mrp: parseFloat(row.mrp),
+            total: parseFloat(row.mrp),
+          });
+        }
+        setRows(newRows);
+        return true;
+      } catch (e) {
+        console.log(e);
+        return false;
       }
-      setRows(newRows);
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
+    return false;
   };
 
   const handleQtyChange = (row, colName, newVal) => {
     try {
       // change quantity in invoice
       const newRows = [...rows];
-      const item = rows.find((i) => i.item === row.item);
+      const item = rows.find((i) => i.products_name === row.products_name);
       item[colName] = parseFloat(newVal);
-      if (item.sellQty > item.qty) {
+      if (item.sellQty > item.stock) {
         toast("Quantity cannot be greater than available quantity", "error");
-        item.sellQty = item.qty;
+        item.sellQty = item.stock;
       }
-      item.total = item.sellQty * (item.price - item.discount);
+      item.total = item.sellQty * (item.mrp - item.discount);
       setRows(newRows);
     } catch (error) {
       console.log(error);
@@ -150,6 +153,15 @@ function Shop() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const checkStock = async (_) => {
+    if (_)
+      setStock({
+        name: _.products_name,
+        qty: _.stock,
+        price: _.mrp,
+      });
   };
 
   return (
@@ -172,8 +184,7 @@ function Shop() {
               ref={ACRef}
               size="small"
               autoHighlight
-              options={[]}
-              // options={activeItems}
+              options={activeItems}
               onChange={async (event, value) => {
                 await handleAdd(value);
                 const ele = ACRef.current.getElementsByClassName(
@@ -182,7 +193,9 @@ function Shop() {
                 if (ele) ele.click();
               }}
               getOptionLabel={(option) =>
-                `${option.item}${option.barcode ? `(${option.barcode})` : ""}`
+                `${option.products_name}${
+                  option.barcode ? `(${option.barcode})` : ""
+                }`
               }
               renderInput={(params) => (
                 <TextField
@@ -207,6 +220,7 @@ function Shop() {
             >
               <Grid item xs={3}>
                 <TextField
+                  select
                   variant="outlined"
                   fullWidth
                   size="small"
@@ -271,7 +285,7 @@ function Shop() {
                   fullWidth
                   onClick={async (e) => {
                     if (rows.length) {
-                      // await qSell(rows, txnType);
+                      await qSell(rows, txnType);
                       // set invoice items to empty
                       setRows([]);
                       setTxnType("Cash");
@@ -289,18 +303,19 @@ function Shop() {
             <Autocomplete
               size="small"
               autoHighlight
-              options={[]}
               ref={StockRef}
-              // options={activeItems}
+              options={activeItems}
               onChange={async (event, value) => {
-                // await checkStock(value);
+                await checkStock(value);
                 const ele = StockRef.current.getElementsByClassName(
                   "MuiAutocomplete-clearIndicator"
                 )[0];
                 if (ele) ele.click();
               }}
               getOptionLabel={(option) =>
-                `${option.item}${option.barcode ? `(${option.barcode})` : ""}`
+                `${option.products_name}${
+                  option.barcode ? `(${option.barcode})` : ""
+                }`
               }
               renderInput={(params) => (
                 <TextField
@@ -314,10 +329,10 @@ function Shop() {
               Name : {stock.name}
             </Typography>
             <Typography variant="h4" component="h4" gutterBottom>
-              stock : {stock.qty}
+              Stock : {stock.qty}
             </Typography>
             <Typography variant="h4" component="h4" gutterBottom>
-              Price : {stock.price}
+              Price : Rs {stock.price}
             </Typography>
           </Grid>
         </Grid>

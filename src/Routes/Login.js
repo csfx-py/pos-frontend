@@ -67,7 +67,6 @@ function Login() {
       try {
         const res = await login(name, password);
         setCredentials({ name: "", password: "" });
-        console.log(res.roles_id);
         if (res.success) {
           switch (res.roles_id) {
             case 1:
