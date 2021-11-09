@@ -2,7 +2,7 @@ import { AppBar, makeStyles, Tab, Tabs } from "@material-ui/core";
 import TabPanel from "../../Components/TabPanel";
 import { useContext, useState } from "react";
 import ShopNav from "../../Components/Shop/ShopNav";
-// import ItemsTable from "../../views/Shop/Items/ItemsTable";
+import ItemsTable from "../../views/Shop/Items/ItemsTable";
 import AddBulk from "../../views/Shop/Items/AddBulk";
 import { AuthContext } from "../../Contexts/AuthContext";
 
@@ -33,7 +33,7 @@ function ShopItems() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        {/* <ItemsTable /> */}
+        <ItemsTable />
       </TabPanel>
       {user.is_priviledged && (
         <TabPanel value={value} index={1}>
