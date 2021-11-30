@@ -99,7 +99,6 @@ function ShopBulkSell() {
       const newRows = [...rows];
       const item = rows.find((i) => i.products_id === row.products_id);
       item[colName] = parseFloat(newVal);
-      console.log("item", item);
       item.close =
         item.stock - item.sold - item.qtyCash - item.qtyCard - item.qtyUpi;
       setRows(newRows);
@@ -117,7 +116,6 @@ function ShopBulkSell() {
       sold: 0,
       close: 0,
     }));
-    console.log("_", _);
     setRows(_);
     return;
   };
@@ -176,7 +174,6 @@ function ShopBulkSell() {
   return (
     <div className={classes.root}>
       <ShopNav />
-      {console.log(rows)}
       <Grid container direction="column">
         <Paper elevation={2} className={classes.paper}>
           <Grid item xs={12}>
@@ -192,9 +189,10 @@ function ShopBulkSell() {
                 label="Date"
                 onChange={async (event) => {
                   setIsLoading(true);
+                  setSDate(event.target.value);
+                  console.log(event.target.value);
                   const tempData = await tempSold(event.target.value);
                   setTempSoldItems(tempData);
-                  setSDate(event.target.value);
                   setIsLoading(false);
                 }}
               />
