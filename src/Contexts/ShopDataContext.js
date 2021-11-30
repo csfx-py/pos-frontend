@@ -7,7 +7,7 @@ export const ShopDataContext = createContext();
 
 export const ShopDataProvider = ({ children }) => {
   const { toast } = useContext(UtilityContext);
-  const { refresh } = useContext(AuthContext);
+  const { refresh, user } = useContext(AuthContext);
 
   const [shopItems, setShopItems] = useState([]);
   const [activeItems, setActiveItems] = useState([]);
@@ -45,84 +45,72 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  // const fetchSales = async () => {
-  //   try {
-  //     const { success, shop, token } = await refresh();
-  //     if (success) {
-  //       const res = await API.get("shop/get-sales", {
-  //         params: {
-  //           shop,
-  //         },
-  //         headers: { auth: token },
-  //       });
+  const fetchSales = async () => {
+    try {
+      const { success, shops_id } = await refresh();
+      if (success) {
+        const res = await API.get("shop/todays-sales", {
+          params: {
+            shops_id: shops_id[0],
+          },
+        });
 
-  //       if (res && res.data?.length > 0) {
-  //         const newData = res.data.map((datum) => ({
-  //           ...datum,
-  //           sales_date: datum.sales_date
-  //             .match(/([^T]+)/)[0]
-  //             .split("-")
-  //             .reverse()
-  //             .join("/"),
-  //           total: (
-  //             datum.price *
-  //             (parseInt(datum.qty_card || 0) +
-  //               parseInt(datum.qty_cash || 0) +
-  //               parseInt(datum.qty_upi || 0))
-  //           ).toLocaleString("en-IN", {
-  //             maximumFractionDigits: 2,
-  //             currency: "INR",
-  //           }),
-  //         }));
-  //         setSalesReports(newData);
-  //         return true;
-  //       }
+        if (res && res.data) {
+          const newData = res.data.sales.map((datum) => ({
+            ...datum,
+            total: (
+              datum.price *
+              (parseInt(datum.qty_card || 0) +
+                parseInt(datum.qty_cash || 0) +
+                parseInt(datum.qty_upi || 0))
+            ).toLocaleString("en-IN", {
+              maximumFractionDigits: 2,
+              currency: "INR",
+            }),
+          }));
+          console.log(newData);
+          return [...newData];
+        }
 
-  //       toast(res.data);
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     toast(error.response.data, "error");
-  //     return false;
-  //   }
-  // };
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  };
 
-  // const fetchPurchases = async () => {
-  //   try {
-  //     const { success, shop, token } = await refresh();
-  //     if (success) {
-  //       const res = await API.get("/shop/get-purchase", {
-  //         params: {
-  //           shop,
-  //         },
-  //         headers: { auth: token },
-  //       });
+  const fetchPurchases = async () => {
+    try {
+      const { success, shops_id } = await refresh();
+      if (success) {
+        const res = await API.get("shop/todays-purchase", {
+          params: {
+            shops_id: shops_id[0],
+          },
+        });
 
-  //       if (res && res.data?.length > 0) {
-  //         const newData = res.data.map((datum) => ({
-  //           ...datum,
-  //           purchase_date: datum.purchase_date
-  //             .match(/([^T]+)/)[0]
-  //             .split("-")
-  //             .reverse()
-  //             .join("/"),
-  //           total: (datum.price * datum.qty).toLocaleString("en-IN", {
-  //             maximumFractionDigits: 2,
-  //             currency: "INR",
-  //           }),
-  //         }));
-  //         setPurchaseReport(newData);
-  //         return true;
-  //       }
+        if (res && res.data) {
+          const newData = res.data.sales.map((datum) => ({
+            ...datum,
+            total: (
+              datum.price *
+              (parseInt(datum.qty_card || 0) +
+                parseInt(datum.qty_cash || 0) +
+                parseInt(datum.qty_upi || 0))
+            ).toLocaleString("en-IN", {
+              maximumFractionDigits: 2,
+              currency: "INR",
+            }),
+          }));
+          return [...newData];
+        }
 
-  //       toast(res.data);
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     toast(error.response.data, "error");
-  //     return false;
-  //   }
-  // };
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  };
 
   // const fetchReports = async () => {
   //   await fetchSales();
@@ -158,23 +146,6 @@ export const ShopDataProvider = ({ children }) => {
       return false;
     }
   };
-
-  // const splitInvoices = async () => {
-  //   const invToSplit = [
-  //     ...invoices[activeInvoiceNum].sort((a, b) => a.price - b.price),
-  //   ];
-
-  //   // delete active invoice
-  //   const filteredInvoices = [
-  //     ...invoices.filter((inv, index) => index !== activeInvoiceNum),
-  //   ];
-
-  //   const split = await splitter(invToSplit);
-
-  //   const newInvoices = [...filteredInvoices, ...split];
-  //   setInvoices(newInvoices);
-  //   return;
-  // };
 
   const qSell = async (data, transaction_type) => {
     try {
@@ -252,6 +223,51 @@ export const ShopDataProvider = ({ children }) => {
           return [...res.data];
         }
         toast(res.data);
+        return [];
+      }
+      return [];
+    } catch (error) {
+      toast(error.response.data, "error");
+      return [];
+    }
+  };
+
+  const bulkSell = async (data, sales_date) => {
+    try {
+      const { success, shops_id } = await refresh();
+      console.log(data);
+      if (success) {
+        const finalData = data
+          .filter(
+            (datum) =>
+              datum.qtyCard > 0 || datum.qtyCash > 0 || datum.qtyUpi > 0
+          )
+          .map(
+            ({
+              qtyCash: qty_cash,
+              qtyCard: qty_card,
+              qtyUpi: qty_upi,
+              mrp: price,
+              ...rest
+            }) => ({
+              ...rest,
+              qty_cash,
+              qty_card,
+              qty_upi,
+              price,
+            })
+          );
+        const res = await API.post("/shop/blkSales", {
+          shops_id: shops_id[0],
+          users_id: user.id,
+          items: finalData,
+        });
+        if (res && res.data) {
+          toast("Bulk sold, for results press F12", "success");
+          setChangesMade(changesMade + 1);
+          return true;
+        }
+        toast(res.data);
         return false;
       }
       return false;
@@ -261,54 +277,20 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  // const bulkSell = async (data, sales_date) => {
-  //   try {
-  //     const { success, shops_id } = await refresh();
-  //     console.log(data);
-  //     if (success) {
-  //       const finalData = data
-  //         .filter((datum) => datum.sellQty > 0)
-  //         .map((datum) => ({
-  //           sales_date,
-  //           shop,
-  //           item: datum.item,
-  //           price: datum.mrp,
-  //           qty: datum.sellQty,
-  //         }));
-
-  //       const res = await API.post("/shop/bulksell", finalData);
-  //       if (res && res.data) {
-  //         toast("Bulk sold, for results press F12", "success");
-  //         setChangesMade(changesMade + 1);
-  //         return true;
-  //       }
-  //       toast(res.data);
-  //       return false;
-  //     }
-  //     return false;
-  //   } catch (error) {
-  //     toast(error.response.data, "error");
-  //     return false;
-  //   }
-  // };
-
   return (
     <ShopDataContext.Provider
       value={{
         shopItems,
         activeItems,
-        // invoices,
-        // splitInvoices,
-        // setInvoices,
-        // activeInvoiceNum,
-        // setActiveInvoiceNum,
         addBulk,
         qSell,
         tempSold,
-        // bulkSell,
+        bulkSell,
         purchase,
-        salesReports,
-        purchaseReports,
+        fetchPurchases,
+        fetchSales,
+        // salesReports,
+        // purchaseReports,
       }}
     >
       {children}
