@@ -45,14 +45,13 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  const fetchSales = async () => {
+  const fetchSales = async (sDate) => {
     try {
       const { success, shops_id } = await refresh();
       if (success) {
-        const res = await API.get("shop/todays-sales", {
-          params: {
-            shops_id: shops_id[0],
-          },
+        const res = await API.post("shop/todays-sales", {
+          shops_id: shops_id[0],
+          date: sDate,
         });
 
         if (res && res.data) {
@@ -79,18 +78,17 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  const fetchPurchases = async () => {
+  const fetchPurchases = async (pDate) => {
     try {
       const { success, shops_id } = await refresh();
       if (success) {
-        const res = await API.get("shop/todays-purchase", {
-          params: {
-            shops_id: shops_id[0],
-          },
+        const res = await API.post("shop/todays-purchase", {
+          shops_id: shops_id[0],
+          date: pDate,
         });
 
         if (res && res.data) {
-          const newData = res.data.sales.map((datum) => ({
+          const newData = res.data.purchase.map((datum) => ({
             ...datum,
             total: (
               datum.price *
