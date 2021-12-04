@@ -161,7 +161,6 @@ function ShopPurchase() {
               />
             </Grid>
             <Grid item xs={2}>
-              {console.log(items)}
               <Button
                 variant="contained"
                 size="large"

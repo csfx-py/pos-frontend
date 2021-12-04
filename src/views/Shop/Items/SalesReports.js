@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Grid, Input } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
 import DataTable from "../../../Components/DataTable";
 import { ShopDataContext } from "../../../Contexts/ShopDataContext";
@@ -41,19 +41,24 @@ const columns = [
 
 function SalesReports() {
   const [rows, setRows] = useState([]);
+  const [sDate, setSDate] = useState("");
 
   const { fetchSales } = useContext(ShopDataContext);
 
-  const kek = async () => {
-    setRows(await fetchSales());
-  };
-
-  useEffect(() => {
-    kek();
-  }, []);
+  useEffect(() => {}, [rows]);
 
   return (
     <Grid container direction="column">
+      <Grid item xs={2}>
+        <Input
+          type="date"
+          value={sDate}
+          onChange={async (e) => {
+            setSDate(e.target.value);
+            setRows(await fetchSales(e.target.value));
+          }}
+        />
+      </Grid>
       <Grid item xs={12}>
         <DataTable rows={rows} columns={columns} />
       </Grid>
