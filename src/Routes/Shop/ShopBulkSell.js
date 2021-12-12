@@ -190,7 +190,6 @@ function ShopBulkSell() {
                 onChange={async (event) => {
                   setIsLoading(true);
                   setSDate(event.target.value);
-                  console.log(event.target.value);
                   const tempData = await tempSold(event.target.value);
                   setTempSoldItems(tempData);
                   setIsLoading(false);
@@ -219,34 +218,49 @@ function ShopBulkSell() {
                 <Grid container>
                   <Grid item xs={4}>
                     <Typography variant="h6" gutterBottom>
-                      Cash sold: {""}
+                      Cash sold:{" "}
+                      {tempSoldItems.reduce(
+                        (a, b) => a + b.qty_cash * b.price,
+                        0
+                      )}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="h6" gutterBottom>
-                      Card sold: {""}
+                      Card sold:{" "}
+                      {tempSoldItems.reduce(
+                        (a, b) => a + b.qty_card * b.price,
+                        0
+                      )}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="h6" gutterBottom>
-                      UPI sold: {""}
+                      UPI sold:{" "}
+                      {tempSoldItems.reduce(
+                        (a, b) => a + b.qty_upi * b.price,
+                        0
+                      )}
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid container>
                   <Grid item xs={4}>
                     <Typography variant="h6" gutterBottom>
-                      Cash bulk: {""}
+                      Cash bulk:{" "}
+                      {rows.reduce((a, b) => a + b.qtyCash * b.mrp, 0)}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="h6" gutterBottom>
-                      Card bulk: {""}
+                      Card bulk: {" "}
+                      {rows.reduce((a, b) => a + b.qtyCard * b.mrp, 0)}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="h6" gutterBottom>
-                      UPI bulk: {""}
+                      UPI bulk: {" "}
+                      {rows.reduce((a, b) => a + b.qtyUpi * b.mrp, 0)}
                     </Typography>
                   </Grid>
                 </Grid>
