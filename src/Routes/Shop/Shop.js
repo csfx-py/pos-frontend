@@ -132,7 +132,7 @@ function Shop() {
     try {
       // change quantity in invoice
       const newRows = [...rows];
-      const item = rows.find((i) => i.products_name === row.products_name);
+      const item = rows.find((i) => i.products_id === row.products_id);
       item[colName] = parseFloat(newVal);
       if (item.sellQty > item.stock) {
         toast("Quantity cannot be greater than available quantity", "error");
@@ -145,10 +145,9 @@ function Shop() {
     }
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = (row) => {
     try {
-      const newRows = [...rows];
-      newRows.splice(index, 1);
+      const newRows = rows.filter((i) => i.products_id !== row.products_id);
       setRows(newRows);
     } catch (error) {
       console.log(error);
