@@ -2,8 +2,9 @@ import { AppBar, makeStyles, Tab, Tabs } from "@material-ui/core";
 import TabPanel from "../../Components/TabPanel";
 import { useState } from "react";
 import ShopNav from "../../Components/Shop/ShopNav";
-import SalesReports from "../../views/Shop/Items/SalesReports";
-import PurchaseReports from "../../views/Shop/Items/PurchaseReport";
+import SalesReports from "../../views/Shop/Reports/SalesReports";
+import PurchaseReports from "../../views/Shop/Reports/PurchaseReport";
+import Invoices from "../../views/Shop/Reports/Invoices";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,14 +26,18 @@ function Reports() {
       <ShopNav />
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange}>
+          <Tab label="Invoices" />
           <Tab label="Sales" />
           <Tab label="Purchases" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <SalesReports />
+        <Invoices />
       </TabPanel>
       <TabPanel value={value} index={1}>
+        <SalesReports />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
         <PurchaseReports />
       </TabPanel>
     </div>
