@@ -45,13 +45,14 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  const fetchSales = async (sDate) => {
+  const fetchSales = async (sDate, eDate) => {
     try {
       const { success, shops_id } = await refresh();
       if (success) {
-        const res = await API.post("shop/todays-sales", {
+        const res = await API.post("shop/sales-report", {
           shops_id: shops_id[0],
-          date: sDate,
+          sDate,
+          eDate,
         });
 
         if (res && res.data) {
@@ -78,13 +79,14 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  const fetchPurchases = async (pDate) => {
+  const fetchPurchases = async (sDate, eDate) => {
     try {
       const { success, shops_id } = await refresh();
       if (success) {
-        const res = await API.post("shop/todays-purchase", {
+        const res = await API.post("shop/purchase-report", {
           shops_id: shops_id[0],
-          date: pDate,
+          sDate,
+          eDate,
         });
 
         if (res && res.data) {
@@ -99,6 +101,31 @@ export const ShopDataProvider = ({ children }) => {
               maximumFractionDigits: 2,
               currency: "INR",
             }),
+          }));
+          return [...newData];
+        }
+
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const fetchInvoices = async (sDate, eDate) => {
+    try {
+      const { success, shops_id } = await refresh();
+      if (success) {
+        const res = await API.post("shop/invoices", {
+          shops_id: shops_id[0],
+          sDate,
+          eDate,
+        });
+
+        if (res && res.data) {
+          const newData = res.data.invoices.map((datum) => ({
+            ...datum,
+            invoice_date: new Date(datum.invoice_date).toLocaleDateString(),
           }));
           return [...newData];
         }
@@ -259,6 +286,7 @@ export const ShopDataProvider = ({ children }) => {
           shops_id: shops_id[0],
           users_id: user.id,
           items: finalData,
+          sales_date,
         });
         if (res && res.data) {
           toast("Bulk sold, for results press F12", "success");
@@ -287,6 +315,7 @@ export const ShopDataProvider = ({ children }) => {
         purchase,
         fetchPurchases,
         fetchSales,
+        fetchInvoices,
         // salesReports,
         // purchaseReports,
       }}

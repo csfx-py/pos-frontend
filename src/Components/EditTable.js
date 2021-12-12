@@ -56,7 +56,6 @@ function CustomCell({ row, column, value, handleChange, handleDelete }) {
           variant="contained"
           color="secondary"
           onClick={(e) => {
-            console.log(row);
             handleDelete(row);
           }}
         >
