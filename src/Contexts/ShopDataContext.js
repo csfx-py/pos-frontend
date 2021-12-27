@@ -137,6 +137,50 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
+  const fetchItemReport = async (pid, sDate, eDate) => {
+    try {
+      const { success, shops_id } = await refresh();
+      if (success) {
+        const res = await API.post("shop/product/invoices", {
+          id: pid,
+          shops_id: shops_id[0],
+          sDate,
+          eDate,
+        });
+
+        if (res && res.data) {
+          const purchase = res.data.purchase.map((datum) => ({
+            ...datum,
+            type: "purchase",
+            qty: "+" + datum.qty,
+            date: new Date(datum.purchase_date).toLocaleDateString(),
+          }));
+          const sales = res.data.sales.map((datum) => ({
+            ...datum,
+            type: "sales",
+            qty: "-" + datum.qty,
+            date: new Date(datum.sales_date).toLocaleDateString(),
+          }));
+
+          const merged = [...purchase, ...sales];
+
+          // sort merged according to date
+          merged.sort((a, b) => {
+            if (a.date < b.date) return -1;
+            if (a.date > b.date) return 1;
+            return 0;
+          });
+
+          return [...merged];
+        }
+        return [];
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
+  };
+
   // const fetchReports = async () => {
   //   await fetchSales();
   //   await fetchPurchases();
@@ -316,6 +360,7 @@ export const ShopDataProvider = ({ children }) => {
         fetchPurchases,
         fetchSales,
         fetchInvoices,
+        fetchItemReport,
         // salesReports,
         // purchaseReports,
       }}
