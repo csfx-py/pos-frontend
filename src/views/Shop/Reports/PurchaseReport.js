@@ -51,7 +51,6 @@ function PurchaseReports() {
             value={sDate}
             onChange={async (e) => {
               setSDate(e.target.value);
-              setRows(await fetchPurchases(e.target.value));
             }}
           />
         </Grid>
@@ -62,7 +61,6 @@ function PurchaseReports() {
             value={eDate}
             onChange={async (e) => {
               setEDate(e.target.value);
-              setRows(await fetchPurchases(e.target.value));
             }}
           />
         </Grid>
