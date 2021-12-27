@@ -5,6 +5,7 @@ import ShopNav from "../../Components/Shop/ShopNav";
 import SalesReports from "../../views/Shop/Reports/SalesReports";
 import PurchaseReports from "../../views/Shop/Reports/PurchaseReport";
 import Invoices from "../../views/Shop/Reports/Invoices";
+import Item from "../../views/Shop/Reports/Item";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +30,7 @@ function Reports() {
           <Tab label="Invoices" />
           <Tab label="Sales" />
           <Tab label="Purchases" />
+          <Tab label="Item" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -39,6 +41,9 @@ function Reports() {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <PurchaseReports />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <Item />
       </TabPanel>
     </div>
   );
