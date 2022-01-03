@@ -11,8 +11,6 @@ export const ShopDataProvider = ({ children }) => {
 
   const [shopItems, setShopItems] = useState([]);
   const [activeItems, setActiveItems] = useState([]);
-  const [salesReports, setSalesReports] = useState([]);
-  const [purchaseReports, setPurchaseReport] = useState([]);
   const [changesMade, setChangesMade] = useState(0);
 
   const fetchItems = async () => {
@@ -127,6 +125,9 @@ export const ShopDataProvider = ({ children }) => {
             ...datum,
             invoice_date: new Date(datum.invoice_date).toLocaleDateString(),
           }));
+          newData.sort((a, b) => {
+            return new Date(a.invoice_date) - new Date(b.invoice_date);
+          });
           return [...newData];
         }
 
@@ -181,14 +182,9 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  // const fetchReports = async () => {
-  //   await fetchSales();
-  //   await fetchPurchases();
-  // };
 
   useEffect(() => {
     fetchItems();
-    // fetchReports();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changesMade]);
 
@@ -361,8 +357,6 @@ export const ShopDataProvider = ({ children }) => {
         fetchSales,
         fetchInvoices,
         fetchItemReport,
-        // salesReports,
-        // purchaseReports,
       }}
     >
       {children}
