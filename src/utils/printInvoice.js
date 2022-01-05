@@ -28,6 +28,11 @@ const printInvoice = async (sales_rows) => {
     p {
       text-align: center;
     }
+
+    .info {
+      display: flex;
+      justify-content: space-between;
+    }
     
     .type-number {
       text-align: right;
@@ -51,7 +56,7 @@ const printInvoice = async (sales_rows) => {
     }
     
     th:first-child {
-      width: 70%;
+      width: 55%;
     }
     
     tr:last-child {
@@ -88,7 +93,6 @@ const printInvoice = async (sales_rows) => {
     </body>
     </html>`
   );
-  console.log(sales_rows);
   sales_rows.forEach((row) => {
     const rowsToPrintSplit = [];
     // get 6 rows per page
@@ -97,18 +101,22 @@ const printInvoice = async (sales_rows) => {
     }
     // append pages to body
     for (let i = 0; i < rowsToPrintSplit.length; i++) {
+      console.log(rowsToPrintSplit[i]);
       pri.document.body.innerHTML += `<div class="page">
         <p>Liquor Town</p>
         <p>R.P.D cross, Tilakwadi, Belgaum-590006</p>
-        <p class="type-number">Invoice number ${
-          rowsToPrintSplit[0].invoice_number
-        }</p>
+        <div class="info">
+        <p>${rowsToPrintSplit[i][0].invoice_date}</p>
+        <p >Invoice number: ${rowsToPrintSplit[i][0].invoice_number}</p>
+        <p>Number: 9876543210</p>
+        </div>
             <table>
             <thead>
               <tr>
                 <th>Item</th>
-                <th>Qty</th>
                 <th>Price</th>
+                <th>Qty</th>
+                <th>Discount/<br />item</th>
                 <th>Total</th>
               </tr>
             </thead>
@@ -118,15 +126,27 @@ const printInvoice = async (sales_rows) => {
                     (row) => `
                 <tr>
                   <td>${row.name}</td>
-                  <td>${row.qty}</td>
                   <td>${parseFloat(row.price).toFixed(2)}</td>
+                  <td>${row.qty}</td>
+                  <td>${parseFloat(row.discount).toFixed(2)}</td>
                   <td>${parseFloat(row.total).toFixed(2)}</td>
                 </tr>
                 `
                   )
                   .join("")}
                <tr>
-                <td colspan="3" style="text-align: right;">Total</td>
+                <td colspan="2" style="text-align: right;">Total</td>
+                <td>${rowsToPrintSplit[i].reduce(
+                  (a, b) => parseFloat(a) + parseInt(b.qty),
+                  0
+                )}</td>
+                <td >${rowsToPrintSplit[i]
+                  .reduce(
+                    (a, b) =>
+                      parseFloat(a) + parseFloat(b.discount) * parseInt(b.qty),
+                    0
+                  )
+                  .toFixed(2)}</td>
                 <td>${rowsToPrintSplit[i]
                   .reduce((a, b) => parseFloat(a) + parseFloat(b.total), 0)
                   .toFixed(2)}</td>
