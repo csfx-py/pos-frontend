@@ -1,4 +1,4 @@
-import { Button, Grid, TextField } from "@material-ui/core";
+import { Button, Grid, Input, InputLabel, TextField } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
 import DataTable from "../../../Components/DataTable";
 import { ShopDataContext } from "../../../Contexts/ShopDataContext";
@@ -31,10 +31,18 @@ const columns = [
     id: "price",
     label: "Price",
     minWidth: 200,
+    format: (value) => value.toLocaleString("en-IN"),
   },
   {
     id: "qty",
     label: "qty",
+    minWidth: 50,
+    align: "right",
+    format: (value) => value.toLocaleString("en-IN"),
+  },
+  {
+    id: "discount",
+    label: "discount/unit",
     minWidth: 50,
     align: "right",
     format: (value) => value.toLocaleString("en-IN"),
@@ -53,6 +61,8 @@ function Invoices() {
   const [invoices, setInvoices] = useState([]);
 
   const [salesNum, setSalesNum] = useState("");
+  const [sDate, setSDate] = useState("");
+  const [eDate, setEDate] = useState("");
 
   const { fetchInvoices } = useContext(ShopDataContext);
   const { toast } = useContext(UtilityContext);
@@ -60,13 +70,10 @@ function Invoices() {
   const handlePrint = async (e) => {
     // get all rows with invoice number
     const sold_invoices = invoices.filter((inv) => inv.sales_no === salesNum);
-    console.log(sold_invoices);
     // from sold_invoices put all rows with same invoice_number in one array
     let grouped = [];
     sold_invoices.forEach((inv) => {
-      const item = grouped.find(
-        (i) => i.invoice_number === inv.invoice_number
-      );
+      const item = grouped.find((i) => i.invoice_number === inv.invoice_number);
       if (item) {
         item.rows.push(inv);
       } else {
@@ -87,12 +94,51 @@ function Invoices() {
     });
   }, []);
 
-  useEffect(() => {}, [rows]);
   return (
-    <Grid container spacing={3} direction="column">
+    <Grid container spacing={3}>
       <Grid item xs={12}>
         <Grid container spacing={3}>
-          <Grid item xs={2}></Grid>
+          <Grid item xs={2}>
+            <InputLabel>Start Date</InputLabel>
+            <Input
+              type="date"
+              value={sDate}
+              onChange={async (e) => {
+                setSDate(e.target.value);
+              }}
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <InputLabel>End Date</InputLabel>
+            <Input
+              type="date"
+              value={eDate}
+              onChange={async (e) => {
+                setEDate(e.target.value);
+              }}
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={async (e) => {
+                // check if sDate and eDate are not empty
+                if (sDate && eDate) {
+                  // filter invoices with sDate and eDate
+                  const filtered = invoices.filter(
+                    (inv) =>
+                      new Date(inv.invoice_date.replace(/(\d+[/])(\d+[/])/, '$2$1')) >= new Date(sDate) &&
+                      new Date(inv.invoice_date.replace(/(\d+[/])(\d+[/])/, '$2$1')) <= new Date(eDate)
+                  );
+                  setRows(filtered);
+                }
+              }}
+            >
+              Generate Report
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12}>
