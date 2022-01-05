@@ -103,7 +103,7 @@ function Invoices() {
           <Grid item xs={2}>
             <TextField
               id="invNum"
-              label="Invoice Number"
+              label="Sales Number"
               variant="outlined"
               size="small"
               fullWidth
