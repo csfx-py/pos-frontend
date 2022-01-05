@@ -52,16 +52,32 @@ function Invoices() {
   const [rows, setRows] = useState([]);
   const [invoices, setInvoices] = useState([]);
 
-  const [invNum, setInvNum] = useState("");
+  const [salesNum, setSalesNum] = useState("");
 
   const { fetchInvoices } = useContext(ShopDataContext);
   const { toast } = useContext(UtilityContext);
 
   const handlePrint = async (e) => {
     // get all rows with invoice number
-    const rowsToPrint = invoices.filter((inv) => inv.invoice_number === invNum);
+    const sold_invoices = invoices.filter((inv) => inv.sales_no === salesNum);
+    console.log(sold_invoices);
+    // from sold_invoices put all rows with same invoice_number in one array
+    let grouped = [];
+    sold_invoices.forEach((inv) => {
+      const item = grouped.find(
+        (i) => i.invoice_number === inv.invoice_number
+      );
+      if (item) {
+        item.rows.push(inv);
+      } else {
+        grouped.push({
+          invoice_number: inv.invoice_number,
+          rows: [inv],
+        });
+      }
+    });
 
-    printInvoice(rowsToPrint);
+    printInvoice(grouped);
   };
 
   useEffect(() => {
@@ -92,7 +108,7 @@ function Invoices() {
               size="small"
               fullWidth
               onChange={(e) => {
-                setInvNum(e.target.value);
+                setSalesNum(e.target.value);
               }}
             />
           </Grid>
@@ -101,7 +117,7 @@ function Invoices() {
               variant="contained"
               color="primary"
               onClick={async (e) => {
-                if (invNum) {
+                if (salesNum) {
                   return await handlePrint(e);
                 } else {
                   toast("Please enter invoice number", "error");
