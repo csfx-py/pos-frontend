@@ -231,7 +231,7 @@ export const ShopDataProvider = ({ children }) => {
           toast("Q-Sell added, for results press F12", "success");
           setChangesMade(changesMade + 1);
           console.log(res.data);
-          return true;
+          return res.data;
         }
         toast(res.data);
         return false;
