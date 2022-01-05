@@ -12,6 +12,7 @@ import { UtilityContext } from "../../Contexts/UtilityContext";
 import { ShopDataContext } from "../../Contexts/ShopDataContext";
 import ShopNav from "../../Components/Shop/ShopNav";
 import EditTable from "../../Components/EditTable";
+import printInvoice from "../../utils/printInvoice";
 
 const columns = [
   {
@@ -88,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 function Shop() {
   const classes = useStyles();
 
-  const { activeItems, qSell } = useContext(ShopDataContext);
+  const { activeItems, qSell, fetchInvoices } = useContext(ShopDataContext);
   const { toast } = useContext(UtilityContext);
 
   const [rows, setRows] = useState([]);
@@ -244,38 +245,50 @@ function Shop() {
                     .toLocaleString("en-IN") || 0}
                 </Typography>
               </Grid>
-              {/* <Grid item xs={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={async (e) => {
-                  if (rows.length > 0 && txnType !== "") {
-                    if (
-                      rows.reduce((acc, i) => acc + parseFloat(i.total), 0) >
-                        4000 &&
-                      (rows.length > 1 || rows[0].sellQty > 1)
-                    ) {
-                      // const invoices = await splitInvoices(rows);
-                      toast("placeholder: split invoice");
-                      toast("placeholder: saved split", "success");
+              <Grid item xs={3}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={async (e) => {
+                    if (rows.length) {
+                      const { sales_no } = await qSell(rows, txnType);
+                      // set invoice items to empty
                       setRows([]);
-                      setTxnType("");
+                      setTxnType("Cash");
+
+                      if (sales_no) {
+                        // print invoices
+                        const invoices = await fetchInvoices();
+                        const sold_invoices = invoices.filter(
+                          (inv) => inv.sales_no === sales_no
+                        );
+                        // from sold_invoices put all rows with same invoice_number in one array
+                        let grouped = [];
+                        sold_invoices.forEach((inv) => {
+                          const item = grouped.find(
+                            (i) => i.invoice_number === inv.invoice_number
+                          );
+                          if (item) {
+                            item.rows.push(inv);
+                          } else {
+                            grouped.push({
+                              invoice_number: inv.invoice_number,
+                              rows: [inv],
+                            });
+                          }
+                        });
+
+                        printInvoice(grouped);
+                      }
                       return;
                     }
-                    // await qSell(rows, txnType);
-                    toast("placeholder: saved", "success");
-                    // set invoice items to empty
-                    setRows([]);
-                    setTxnType("");
-                    return;
-                  }
-                  toast("form incomplete", "error");
-                }}
-              >
-                Save and Print
-              </Button>
-            </Grid> */}
+                    toast("form incomplete", "error");
+                  }}
+                >
+                  Save and Print
+                </Button>
+              </Grid>
               <Grid item xs={2}>
                 <Button
                   variant="contained"
@@ -336,6 +349,11 @@ function Shop() {
           </Grid>
         </Grid>
       </Grid>
+      <iframe
+        title="invoice"
+        id="ifmcontentstoprint"
+        style={{ height: "0px", width: "0px", position: "absolute" }}
+      ></iframe>
     </div>
   );
 }
