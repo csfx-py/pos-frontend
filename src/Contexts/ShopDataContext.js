@@ -125,9 +125,6 @@ export const ShopDataProvider = ({ children }) => {
             ...datum,
             invoice_date: new Date(datum.invoice_date).toLocaleDateString(),
           }));
-          newData.sort((a, b) => {
-            return new Date(a.invoice_date) - new Date(b.invoice_date);
-          });
           return [...newData];
         }
 
@@ -219,8 +216,10 @@ export const ShopDataProvider = ({ children }) => {
         const finalData = data.map((datum) => ({
           products_id: datum.products_id,
           qty: datum.sellQty,
+          discount: datum.discount,
           price: datum.mrp,
         }));
+        console.log(finalData);
         const res = await API.post("/shop/sale", {
           shops_id: shops_id[0],
           users_id: id,
@@ -300,7 +299,6 @@ export const ShopDataProvider = ({ children }) => {
   const bulkSell = async (data, sales_date) => {
     try {
       const { success, shops_id } = await refresh();
-      console.log(data);
       if (success) {
         const finalData = data
           .filter(
