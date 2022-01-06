@@ -253,28 +253,83 @@ function ShopBulkSell() {
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="h6" gutterBottom>
-                      Card bulk: {" "}
+                      Card bulk:{" "}
                       {rows.reduce((a, b) => a + b.qtyCard * b.mrp, 0)}
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="h6" gutterBottom>
-                      UPI bulk: {" "}
-                      {rows.reduce((a, b) => a + b.qtyUpi * b.mrp, 0)}
+                      UPI bulk: {rows.reduce((a, b) => a + b.qtyUpi * b.mrp, 0)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container>
+                  <Grid item xs={4}>
+                    <Typography variant="h6" gutterBottom>
+                      Total Cash:{" "}
+                      {rows.reduce((a, b) => a + b.qtyCash * b.mrp, 0) +
+                        tempSoldItems.reduce(
+                          (a, b) => a + b.qty_cash * b.price,
+                          0
+                        )}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="h6" gutterBottom>
+                      Total Card:{" "}
+                      {rows.reduce((a, b) => a + b.qtyCard * b.mrp, 0) +
+                        tempSoldItems.reduce(
+                          (a, b) => a + b.qty_card * b.price,
+                          0
+                        )}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="h6" gutterBottom>
+                      Total UPI:{" "}
+                      {rows.reduce((a, b) => a + b.qtyUpi * b.mrp, 0) +
+                        tempSoldItems.reduce(
+                          (a, b) => a + b.qty_upi * b.price,
+                          0
+                        )}
                     </Typography>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={1}>
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.btn}
-                onClick={handleSubmit}
-              >
-                Submit
-              </Button>
+              <Grid container direction="column">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.btn}
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6" gutterBottom>
+                    Total:{" "}
+                    {rows.reduce((a, b) => a + b.qtyCash * b.mrp, 0) +
+                      tempSoldItems.reduce(
+                        (a, b) => a + b.qty_cash * b.price,
+                        0
+                      ) +
+                      rows.reduce((a, b) => a + b.qtyCard * b.mrp, 0) +
+                      tempSoldItems.reduce(
+                        (a, b) => a + b.qty_card * b.price,
+                        0
+                      ) +
+                      rows.reduce((a, b) => a + b.qtyUpi * b.mrp, 0) +
+                      tempSoldItems.reduce(
+                        (a, b) => a + b.qty_upi * b.price,
+                        0
+                      )}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Paper>
