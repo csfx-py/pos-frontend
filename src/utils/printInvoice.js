@@ -101,11 +101,17 @@ const printInvoice = async (sales_rows) => {
     }
     // append pages to body
     for (let i = 0; i < rowsToPrintSplit.length; i++) {
-      console.log(rowsToPrintSplit[i]);
-      pri.document.body.innerHTML += `<div class="page">
-        <p>Liquor Town</p>
-        <p>R.P.D cross, Tilakwadi, Belgaum-590006</p>
-        <div class="info">
+      pri.document.body.innerHTML += `
+      <div class="page">
+      <div class="info">
+        <p><b>Liquor Town</b></p>
+        <p>| <b>Veerabhadra Prasanna</b> |</p>
+      </div>
+      <div class="info">
+        <p><b>R.P.D cross, Tilakwadi, Belgaum-590006</b></p>
+        <p>${rowsToPrintSplit[i][0].transaction_type + ' Memo'}</p>
+      </div>
+      <div class="info">
         <p>${rowsToPrintSplit[i][0].invoice_date}</p>
         <p >Invoice number: ${rowsToPrintSplit[i][0].invoice_number}</p>
         <p>Number: 9876543210</p>
@@ -160,7 +166,6 @@ const printInvoice = async (sales_rows) => {
   });
   pri.document.close();
   pri.focus();
-  console.log(pri.document);
   pri.print();
 };
 

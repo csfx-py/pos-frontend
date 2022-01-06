@@ -66,7 +66,6 @@ export const ShopDataProvider = ({ children }) => {
               currency: "INR",
             }),
           }));
-          console.log(newData);
           return [...newData];
         }
 
@@ -219,7 +218,6 @@ export const ShopDataProvider = ({ children }) => {
           discount: datum.discount,
           price: datum.mrp,
         }));
-        console.log(finalData);
         const res = await API.post("/shop/sale", {
           shops_id: shops_id[0],
           users_id: id,
@@ -229,7 +227,6 @@ export const ShopDataProvider = ({ children }) => {
         if (res && res.data) {
           toast("Q-Sell added, for results press F12", "success");
           setChangesMade(changesMade + 1);
-          console.log(res.data);
           return res.data;
         }
         toast(res.data);
@@ -253,8 +250,6 @@ export const ShopDataProvider = ({ children }) => {
           qty_case: datum.qty_case,
           qty_item: datum.qty_unit,
         }));
-
-        console.log(finalData);
 
         const res = await API.post("/shop/purchase", finalData);
         if (res && res.data) {
@@ -283,7 +278,6 @@ export const ShopDataProvider = ({ children }) => {
           },
         });
         if (res && res.data) {
-          console.log(res.data);
           return [...res.data];
         }
         toast(res.data);
