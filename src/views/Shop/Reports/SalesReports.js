@@ -11,13 +11,6 @@ const columns = [
     minWidth: 200,
   },
   {
-    id: "qty",
-    label: "total qty",
-    minWidth: 50,
-    align: "right",
-    format: (value) => value.toLocaleString("en-IN"),
-  },
-  {
     id: "qty_cash",
     label: "Cash Qty",
     minWidth: 50,
@@ -34,6 +27,13 @@ const columns = [
   {
     id: "qty_upi",
     label: "Upi Qty",
+    minWidth: 50,
+    align: "right",
+    format: (value) => value.toLocaleString("en-IN"),
+  },
+  {
+    id: "qty",
+    label: "Total qty",
     minWidth: 50,
     align: "right",
     format: (value) => value.toLocaleString("en-IN"),
