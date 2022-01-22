@@ -145,16 +145,6 @@ function AddItem() {
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="Barcode"
-              value={formControlState.barcode}
-              name="barcode"
-              onChange={handleChange}
-              fullWidth
-              color="secondary"
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
               label="Purchase price"
               value={formControlState.purchase_price}
               name="purchase_price"
@@ -240,6 +230,16 @@ function AddItem() {
               value={formControlState.mrp4}
               name="mrp4"
               type="number"
+              onChange={handleChange}
+              fullWidth
+              color="secondary"
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Barcode"
+              value={formControlState.barcode}
+              name="barcode"
               onChange={handleChange}
               fullWidth
               color="secondary"
