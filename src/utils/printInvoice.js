@@ -82,10 +82,10 @@ const printInvoice = async (sales_rows) => {
         visibility: visible;
       }
 
-      .page {
-        clear: both;
-        page-break-after: always;
-      }
+      // .page {
+      //   clear: both;
+      //   page-break-after: always;
+      // }
     }
     </style>
     </head>
