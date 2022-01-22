@@ -178,7 +178,7 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-
+  
   useEffect(() => {
     fetchItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,7 +208,7 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  const qSell = async (data, transaction_type) => {
+  const qSell = async (data, transaction_type, sDate) => {
     try {
       const { success, shops_id, id } = await refresh();
       if (success) {
@@ -223,6 +223,7 @@ export const ShopDataProvider = ({ children }) => {
           users_id: id,
           transaction_type,
           items: finalData,
+          sDate: sDate ? sDate : null,
         });
         if (res && res.data) {
           toast("Q-Sell added, for results press F12", "success");

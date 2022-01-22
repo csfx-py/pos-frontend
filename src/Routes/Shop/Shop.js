@@ -1,6 +1,7 @@
 import {
   Button,
   Grid,
+  Input,
   makeStyles,
   MenuItem,
   TextField,
@@ -94,6 +95,7 @@ function Shop() {
 
   const [rows, setRows] = useState([]);
   const [txnType, setTxnType] = useState("Cash");
+  const [sDate, setSDate] = useState("");
   const [stock, setStock] = useState({ name: "", qty: 0, price: 0 });
 
   const ACRef = useRef();
@@ -180,6 +182,42 @@ function Shop() {
         </Grid>
         <Grid container spacing={1}>
           <Grid item xs={8}>
+            <Grid
+              container
+              spacing={1}
+              alignItems="flex-end"
+              justifyContent="space-between"
+              style={{ marginBottom: "1rem" }}
+            >
+              <Grid item xs={2}>
+                <Input
+                  type="date"
+                  label="Date"
+                  onChange={async (event) => {
+                    setSDate(event.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  value={txnType}
+                  onChange={(event) => {
+                    setTxnType(event.target.value);
+                  }}
+                >
+                  <MenuItem value="Cash">Cash</MenuItem>
+                  {["Card", "UPI"].map((datum, index) => (
+                    <MenuItem key={index} value={datum}>
+                      {datum}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+            </Grid>
             <Autocomplete
               ref={ACRef}
               size="small"
@@ -219,25 +257,6 @@ function Shop() {
               justifyContent="space-between"
             >
               <Grid item xs={3}>
-                <TextField
-                  select
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  value={txnType}
-                  onChange={(event) => {
-                    setTxnType(event.target.value);
-                  }}
-                >
-                  <MenuItem value="Cash">Cash</MenuItem>
-                  {["Card", "UPI"].map((datum, index) => (
-                    <MenuItem key={index} value={datum}>
-                      {datum}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={3}>
                 <Typography variant="h4" color="secondary">
                   Total :
                   {rows
@@ -252,34 +271,41 @@ function Shop() {
                   size="large"
                   onClick={async (e) => {
                     if (rows.length) {
-                      const { sales_no } = await qSell(rows, txnType);
-                      // set invoice items to empty
-                      setRows([]);
-                      setTxnType("Cash");
+                      // confirm
+                      const res = window.confirm(
+                        "Are you sure you want to sell these items?"
+                      );
+                      if (res) {
+                        const { sales_no } = await qSell(rows, txnType, sDate);
+                        // set invoice items to empty
+                        setRows([]);
+                        setTxnType("Cash");
 
-                      if (sales_no) {
-                        // print invoices
-                        const invoices = await fetchInvoices();
-                        const sold_invoices = invoices.filter(
-                          (inv) => inv.sales_no === sales_no
-                        );
-                        // from sold_invoices put all rows with same invoice_number in one array
-                        let grouped = [];
-                        sold_invoices.forEach((inv) => {
-                          const item = grouped.find(
-                            (i) => i.invoice_number === inv.invoice_number
+                        if (sales_no) {
+                          // print invoices
+                          const invoices = await fetchInvoices();
+                          const sold_invoices = invoices.filter(
+                            (inv) => inv.sales_no === sales_no
                           );
-                          if (item) {
-                            item.rows.push(inv);
-                          } else {
-                            grouped.push({
-                              invoice_number: inv.invoice_number,
-                              rows: [inv],
-                            });
-                          }
-                        });
+                          // from sold_invoices put all rows with same invoice_number in one array
+                          let grouped = [];
+                          sold_invoices.forEach((inv) => {
+                            const item = grouped.find(
+                              (i) => i.invoice_number === inv.invoice_number
+                            );
+                            if (item) {
+                              item.rows.push(inv);
+                            } else {
+                              grouped.push({
+                                invoice_number: inv.invoice_number,
+                                rows: [inv],
+                              });
+                            }
+                          });
 
-                        printInvoice(grouped);
+                          printInvoice(grouped);
+                        }
+                        return;
                       }
                       return;
                     }
@@ -297,10 +323,17 @@ function Shop() {
                   fullWidth
                   onClick={async (e) => {
                     if (rows.length) {
-                      await qSell(rows, txnType);
-                      // set invoice items to empty
-                      setRows([]);
-                      setTxnType("Cash");
+                      // confirm
+                      const res = window.confirm(
+                        "Are you sure you want to sell these items?"
+                      );
+                      if (res) {
+                        await qSell(rows, txnType, sDate);
+                        // set invoice items to empty
+                        setRows([]);
+                        setTxnType("Cash");
+                        return;
+                      }
                       return;
                     }
                     toast("form incomplete", "error");
@@ -337,7 +370,12 @@ function Shop() {
                 />
               )}
             />
-            <Typography variant="h4" component="h4" gutterBottom>
+            <Typography
+              variant="h4"
+              component="h4"
+              gutterBottom
+              style={{ marginTop: "1rem" }}
+            >
               Name : {stock.name}
             </Typography>
             <Typography variant="h4" component="h4" gutterBottom>
