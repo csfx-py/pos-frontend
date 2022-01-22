@@ -84,15 +84,46 @@ function Invoices() {
       }
     });
 
+    // sort grouped array by getting last digits of invoice_number
+    grouped.sort((a, b) => {
+      const inm = a.invoice_number.split("-");
+      const inb = b.invoice_number.split("-");
+      return parseInt(inm[inm.length - 1]) - parseInt(inb[inb.length - 1]);
+    });
+
+    console.log(grouped);
+
     printInvoice(grouped);
   };
 
-  useEffect(() => {
-    fetchInvoices().then((_) => {
-      setInvoices(_);
-      setRows(_);
+  const handlePrintGen = async (e) => {
+    // get all rows
+    const sold_invoices = invoices;
+    // from sold_invoices put all rows with same invoice_number in one array
+    let grouped = [];
+    sold_invoices.forEach((inv) => {
+      const item = grouped.find((i) => i.invoice_number === inv.invoice_number);
+      if (item) {
+        item.rows.push(inv);
+      } else {
+        grouped.push({
+          invoice_number: inv.invoice_number,
+          rows: [inv],
+        });
+      }
     });
-  }, []);
+
+    // sort grouped array by getting last digits of invoice_number
+    grouped.sort((a, b) => {
+      const inm = a.invoice_number.split("-");
+      const inb = b.invoice_number.split("-");
+      return parseInt(inm[inm.length - 1]) - parseInt(inb[inb.length - 1]);
+    });
+
+    console.log(grouped);
+
+    printInvoice(grouped);
+  };
 
   return (
     <Grid container spacing={3}>
@@ -126,13 +157,12 @@ function Invoices() {
               onClick={async (e) => {
                 // check if sDate and eDate are not empty
                 if (sDate && eDate) {
-                  // filter invoices with sDate and eDate
-                  const filtered = invoices.filter(
-                    (inv) =>
-                      new Date(inv.invoice_date.replace(/(\d+[/])(\d+[/])/, '$2$1')) >= new Date(sDate) &&
-                      new Date(inv.invoice_date.replace(/(\d+[/])(\d+[/])/, '$2$1')) <= new Date(eDate)
-                  );
-                  setRows(filtered);
+                  // fetch invoices
+                  const invoices = await fetchInvoices(sDate, eDate);
+                  // set rows
+                  setRows(invoices);
+                  // set invoices
+                  setInvoices(invoices);
                 }
               }}
             >
@@ -165,13 +195,28 @@ function Invoices() {
               onClick={async (e) => {
                 if (salesNum) {
                   return await handlePrint(e);
-                } else {
-                  toast("Please enter invoice number", "error");
                 }
+                toast("Please enter sales number", "error");
               }}
               fullWidth
             >
               Print
+            </Button>
+          </Grid>
+          <Grid item xs={6} />
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={async (e) => {
+                if (rows.length > 0) {
+                  return await handlePrintGen(e);
+                }
+                toast("No invoices to print", "error");
+              }}
+              fullWidth
+            >
+              Print Generated
             </Button>
           </Grid>
         </Grid>
