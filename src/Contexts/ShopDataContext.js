@@ -9,9 +9,32 @@ export const ShopDataProvider = ({ children }) => {
   const { toast } = useContext(UtilityContext);
   const { refresh, user } = useContext(AuthContext);
 
+  const [shopDetails, setShopDetails] = useState({});
   const [shopItems, setShopItems] = useState([]);
   const [activeItems, setActiveItems] = useState([]);
   const [changesMade, setChangesMade] = useState(0);
+
+  const fetchShopDetails = async () => {
+    try {
+      const { success, shops_id } = await refresh();
+      if (success) {
+        const res = await API.get("/shop/shop-details", {
+          params: {
+            shops_id: shops_id[0],
+          },
+        });
+        if (res.data) {
+          setShopDetails(res.data);
+          return true;
+        }
+        return false;
+      }
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  };
 
   const fetchItems = async () => {
     try {
@@ -37,6 +60,7 @@ export const ShopDataProvider = ({ children }) => {
         toast(res.data);
         return false;
       }
+      return false;
     } catch (error) {
       toast(error.response.data, "error");
       return false;
@@ -178,9 +202,9 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  
   useEffect(() => {
     fetchItems();
+    fetchShopDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changesMade]);
 
@@ -339,6 +363,7 @@ export const ShopDataProvider = ({ children }) => {
   return (
     <ShopDataContext.Provider
       value={{
+        shopDetails,
         shopItems,
         activeItems,
         addBulk,
