@@ -90,8 +90,8 @@ const useStyles = makeStyles((theme) => ({
 function Shop() {
   const classes = useStyles();
 
-  const { activeItems, qSell, fetchInvoices } = useContext(ShopDataContext);
-  const { toast } = useContext(UtilityContext);
+  const { activeItems, qSell, fetchInvoices, shopDetails } = useContext(ShopDataContext);
+  const { toast, setIsLoading } = useContext(UtilityContext);
 
   const [rows, setRows] = useState([]);
   const [txnType, setTxnType] = useState("Cash");
@@ -276,6 +276,7 @@ function Shop() {
                         "Are you sure you want to sell these items?"
                       );
                       if (res) {
+                        setIsLoading(true);
                         const { sales_no } = await qSell(rows, txnType, sDate);
                         // set invoice items to empty
                         setRows([]);
@@ -303,8 +304,9 @@ function Shop() {
                             }
                           });
 
-                          printInvoice(grouped);
+                          printInvoice(grouped, shopDetails);
                         }
+                        setIsLoading(false);
                         return;
                       }
                       return;
@@ -328,10 +330,12 @@ function Shop() {
                         "Are you sure you want to sell these items?"
                       );
                       if (res) {
+                        setIsLoading(true);
                         await qSell(rows, txnType, sDate);
                         // set invoice items to empty
                         setRows([]);
                         setTxnType("Cash");
+                        setIsLoading(false);
                         return;
                       }
                       return;

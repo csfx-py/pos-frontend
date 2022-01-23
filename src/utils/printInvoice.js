@@ -1,4 +1,4 @@
-const printInvoice = async (sales_rows) => {
+const printInvoice = async (sales_rows, shopDetails) => {
   const pri = document.getElementById("ifmcontentstoprint").contentWindow;
   pri.document.open();
   pri.document.write(
@@ -54,8 +54,12 @@ const printInvoice = async (sales_rows) => {
     th {
       text-align: center;
     }
-    
+
     th:first-child {
+      width: 3%;
+    }
+    
+    th:nth-child(2) {
       width: 55%;
     }
     
@@ -104,21 +108,22 @@ const printInvoice = async (sales_rows) => {
       pri.document.body.innerHTML += `
       <div class="page">
       <div class="info">
-        <p><b>Liquor Town</b></p>
+        <p><b>${shopDetails.name}</b></p>
         <p>| <b>Veerabhadra Prasanna</b> |</p>
       </div>
       <div class="info">
-        <p><b>R.P.D cross, Tilakwadi, Belgaum-590006</b></p>
-        <p>${rowsToPrintSplit[i][0].transaction_type + ' Memo'}</p>
+        <p><b>${shopDetails.address}</b></p>
+        <p>${rowsToPrintSplit[i][0].transaction_type + " Memo"}</p>
       </div>
       <div class="info">
         <p>${rowsToPrintSplit[i][0].invoice_date}</p>
         <p >Invoice number: ${rowsToPrintSplit[i][0].invoice_number}</p>
-        <p>Number: 9876543210</p>
+        <p>${shopDetails.phone}</p>
         </div>
             <table>
             <thead>
               <tr>
+                <th>Sr. No.</th>
                 <th>Item</th>
                 <th>Price</th>
                 <th>Qty</th>
@@ -129,8 +134,9 @@ const printInvoice = async (sales_rows) => {
             <tbody>
                 ${rowsToPrintSplit[i]
                   .map(
-                    (row) => `
+                    (row, index) => `
                 <tr>
+                  <td>${index}</td>
                   <td>${row.name}</td>
                   <td>${parseFloat(row.price).toFixed(2)}</td>
                   <td>${row.qty}</td>
@@ -141,7 +147,7 @@ const printInvoice = async (sales_rows) => {
                   )
                   .join("")}
                <tr>
-                <td colspan="2" style="text-align: right;">Total</td>
+                <td colspan="3" style="text-align: right;">Total</td>
                 <td>${rowsToPrintSplit[i].reduce(
                   (a, b) => parseFloat(a) + parseInt(b.qty),
                   0

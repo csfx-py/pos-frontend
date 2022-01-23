@@ -64,7 +64,7 @@ function Invoices() {
   const [sDate, setSDate] = useState("");
   const [eDate, setEDate] = useState("");
 
-  const { fetchInvoices } = useContext(ShopDataContext);
+  const { fetchInvoices, shopDetails } = useContext(ShopDataContext);
   const { toast } = useContext(UtilityContext);
 
   const handlePrint = async (e) => {
@@ -93,7 +93,7 @@ function Invoices() {
 
     console.log(grouped);
 
-    printInvoice(grouped);
+    printInvoice(grouped, shopDetails);
   };
 
   const handlePrintGen = async (e) => {
@@ -122,7 +122,7 @@ function Invoices() {
 
     console.log(grouped);
 
-    printInvoice(grouped);
+    printInvoice(grouped, shopDetails);
   };
 
   return (
