@@ -18,7 +18,7 @@ const printInvoice = async (sales_rows, shopDetails) => {
     .page {
       padding: 10px;
       width: 21cm;
-      height: 9.9cm;
+      height: calc(297mm / 3);
       display: flex;
       flex-direction: column;
       overflow: auto;
