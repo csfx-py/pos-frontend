@@ -8,6 +8,7 @@ import AddCategory from "../../views/Admin/Items/AddCategory";
 import AddSize from "../../views/Admin/Items/AddSize";
 import AddItem from "../../views/Admin/Items/AddItem";
 import AddBulk from "../../views/Admin/Items/AddBulk";
+import Modify from "../../views/Admin/Items/Modify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,10 +30,11 @@ function AdminItems() {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Items" />
+          <Tab label="Add Item" />
+          <Tab label="Modify" />
           <Tab label="Add Brand" />
           <Tab label="Add Category" />
           <Tab label="Add Size" />
-          <Tab label="Add Item" />
           <Tab label="Add Bulk" />
         </Tabs>
       </AppBar>
@@ -40,18 +42,21 @@ function AdminItems() {
         <ItemsTable />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <AddBrand />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <AddCategory />
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        <AddSize />
-      </TabPanel>
-      <TabPanel value={value} index={4}>
         <AddItem />
       </TabPanel>
+      <TabPanel value={value} index={2}>
+        <Modify />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <AddBrand />
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        <AddCategory />
+      </TabPanel>
       <TabPanel value={value} index={5}>
+        <AddSize />
+      </TabPanel>
+      <TabPanel value={value} index={6}>
         <AddBulk />
       </TabPanel>
     </div>
