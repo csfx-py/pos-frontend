@@ -6,6 +6,7 @@ import SalesReports from "../../views/Shop/Reports/SalesReports";
 import PurchaseReports from "../../views/Shop/Reports/PurchaseReport";
 import Invoices from "../../views/Shop/Reports/Invoices";
 import Item from "../../views/Shop/Reports/Item";
+import Dsr from "../../views/Shop/Reports/Dsr";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +32,7 @@ function Reports() {
           <Tab label="Sales" />
           <Tab label="Purchases" />
           <Tab label="Item" />
+          <Tab label="DSR" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -44,6 +46,9 @@ function Reports() {
       </TabPanel>
       <TabPanel value={value} index={3}>
         <Item />
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        <Dsr />
       </TabPanel>
     </div>
   );
