@@ -80,15 +80,8 @@ export const ShopDataProvider = ({ children }) => {
         if (res && res.data) {
           const newData = res.data.sales.map((datum) => ({
             ...datum,
-            total: (
-              datum.price *
-              (parseInt(datum.qty_card || 0) +
-                parseInt(datum.qty_cash || 0) +
-                parseInt(datum.qty_upi || 0))
-            ).toLocaleString("en-IN", {
-              maximumFractionDigits: 2,
-              currency: "INR",
-            }),
+            mrp: parseFloat(datum.mrp).toFixed(2),
+            total: parseFloat(datum.total).toFixed(2),
           }));
           return [...newData];
         }
@@ -162,7 +155,7 @@ export const ShopDataProvider = ({ children }) => {
     try {
       const { success, shops_id } = await refresh();
       if (success) {
-        const res = await API.post("shop/product/invoices", {
+        const res = await API.post("shop/product-transactions", {
           id: pid,
           shops_id: shops_id[0],
           sDate,
@@ -170,6 +163,11 @@ export const ShopDataProvider = ({ children }) => {
         });
 
         if (res && res.data) {
+          const op = {
+            type: "opening",
+            qty: res.data.openingStock,
+            date: new Date(sDate).toLocaleDateString(),
+          };
           const purchase = res.data.purchase.map((datum) => ({
             ...datum,
             type: "purchase",
@@ -183,7 +181,7 @@ export const ShopDataProvider = ({ children }) => {
             date: new Date(datum.sales_date).toLocaleDateString(),
           }));
 
-          const merged = [...purchase, ...sales];
+          const merged = [op, ...purchase, ...sales];
 
           // sort merged according to date
           merged.sort((a, b) => {
@@ -193,6 +191,26 @@ export const ShopDataProvider = ({ children }) => {
           });
 
           return [...merged];
+        }
+        return [];
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const fetchDsr = async (sDate) => {
+    try {
+      const { success, shops_id } = await refresh();
+      if (success) {
+        const res = await API.post("shop/all-stock-opening", {
+          shops_id: shops_id[0],
+          eDate: sDate,
+        });
+
+        if (res && res.data) {
+          return res.data;
         }
         return [];
       }
@@ -375,6 +393,7 @@ export const ShopDataProvider = ({ children }) => {
         fetchSales,
         fetchInvoices,
         fetchItemReport,
+        fetchDsr,
       }}
     >
       {children}
