@@ -47,7 +47,7 @@ function Item() {
             autoHighlight
             options={shopItems}
             onChange={async (event, value) => {
-              setPid(value.products_id);
+              setPid(value?.products_id || pid);
               const ele = ACRef.current.getElementsByClassName(
                 "MuiAutocomplete-clearIndicator"
               )[0];
