@@ -103,7 +103,11 @@ export const MasterDataProvider = ({ children }) => {
     try {
       const { success } = await refresh();
       if (success) {
-        const res = await API.post("/master/items/category", { name });
+        const res = await API.post(
+          "/master/items/category",
+          { name },
+          { headers: { auth: user.token } }
+        );
         if (res && res.data) {
           toast(name + " added", "success");
           setChangesMade(changesMade + 1);
@@ -123,7 +127,15 @@ export const MasterDataProvider = ({ children }) => {
     try {
       const { success } = await refresh();
       if (success) {
-        const res = await API.post("/master/items/brand", { name });
+        const res = await API.post(
+          "/master/items/brand",
+          { name },
+          {
+            headers: {
+              auth: user.token,
+            },
+          }
+        );
         if (res && res.data) {
           toast(name + " added", "success");
           setChangesMade(changesMade + 1);
@@ -143,7 +155,15 @@ export const MasterDataProvider = ({ children }) => {
     try {
       const { success } = await refresh();
       if (success) {
-        const res = await API.post("/master/items/size", { size });
+        const res = await API.post(
+          "/master/items/size",
+          { size },
+          {
+            headers: {
+              auth: user.token,
+            },
+          }
+        );
         if (res && res.data) {
           toast(size + " added", "success");
           setChangesMade(changesMade + 1);
@@ -178,21 +198,29 @@ export const MasterDataProvider = ({ children }) => {
     try {
       const { success } = await refresh();
       if (success) {
-        const res = await API.post("master/items/products", {
-          name,
-          categories_id,
-          sizes_id,
-          brands_id,
-          barcode,
-          purchase_price,
-          case_qty,
-          case_price,
-          mrp,
-          mrp1,
-          mrp2,
-          mrp3,
-          mrp4,
-        });
+        const res = await API.post(
+          "master/items/products",
+          {
+            name,
+            categories_id,
+            sizes_id,
+            brands_id,
+            barcode,
+            purchase_price,
+            case_qty,
+            case_price,
+            mrp,
+            mrp1,
+            mrp2,
+            mrp3,
+            mrp4,
+          },
+          {
+            headers: {
+              auth: user.token,
+            },
+          }
+        );
         if (res && res.data) {
           toast(name + " added", "success");
           setChangesMade(changesMade + 1);
@@ -212,9 +240,45 @@ export const MasterDataProvider = ({ children }) => {
     try {
       const { success } = await refresh();
       if (success) {
-        const res = await API.post("/master/items/xl-products", items);
+        const res = await API.post("/master/items/xl-products", items, {
+          headers: {
+            auth: user.token,
+          },
+        });
         if (res && res.data) {
           toast("Bulk added, for results press F12", "success");
+          setChangesMade(changesMade + 1);
+          return true;
+        }
+        toast(res.data);
+        return false;
+      }
+      return false;
+    } catch (error) {
+      toast(error.response.data, "error");
+      return false;
+    }
+  };
+
+  const updateField = async (id, field, newVal) => {
+    try {
+      const { success } = await refresh();
+      if (success) {
+        const res = await API.put(
+          `/master/items/modify`,
+          {
+            id,
+            field,
+            newVal,
+          },
+          {
+            headers: {
+              auth: user.token,
+            },
+          }
+        );
+        if (res.status === 200) {
+          toast(field + " updated", "success");
           setChangesMade(changesMade + 1);
           return true;
         }
@@ -240,6 +304,7 @@ export const MasterDataProvider = ({ children }) => {
         addSize,
         addItem,
         addBulk,
+        updateField,
       }}
     >
       {children}
