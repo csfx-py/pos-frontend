@@ -91,8 +91,6 @@ function Invoices() {
       return parseInt(inm[inm.length - 1]) - parseInt(inb[inb.length - 1]);
     });
 
-    console.log(grouped);
-
     printInvoice(grouped, shopDetails);
   };
 
@@ -119,8 +117,6 @@ function Invoices() {
       const inb = b.invoice_number.split("-");
       return parseInt(inm[inm.length - 1]) - parseInt(inb[inb.length - 1]);
     });
-
-    console.log(grouped);
 
     printInvoice(grouped, shopDetails);
   };
