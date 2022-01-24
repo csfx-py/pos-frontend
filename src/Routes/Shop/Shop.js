@@ -90,7 +90,8 @@ const useStyles = makeStyles((theme) => ({
 function Shop() {
   const classes = useStyles();
 
-  const { activeItems, qSell, fetchInvoices, shopDetails } = useContext(ShopDataContext);
+  const { activeItems, qSell, fetchInvoices, shopDetails } =
+    useContext(ShopDataContext);
   const { toast, setIsLoading } = useContext(UtilityContext);
 
   const [rows, setRows] = useState([]);
@@ -284,7 +285,10 @@ function Shop() {
 
                         if (sales_no) {
                           // print invoices
-                          const invoices = await fetchInvoices();
+                          const invoices = await fetchInvoices(
+                            new Date(),
+                            new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+                          );
                           const sold_invoices = invoices.filter(
                             (inv) => inv.sales_no === sales_no
                           );
