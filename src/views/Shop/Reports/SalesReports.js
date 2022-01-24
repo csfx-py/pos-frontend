@@ -1,5 +1,5 @@
-import { Button, Grid, Input, InputLabel } from "@material-ui/core";
-import { useContext, useEffect, useState } from "react";
+import { Button, Grid, Input, InputLabel, Typography } from "@material-ui/core";
+import { useContext, useState } from "react";
 import DataTable from "../../../Components/DataTable";
 import { ShopDataContext } from "../../../Contexts/ShopDataContext";
 import { UtilityContext } from "../../../Contexts/UtilityContext";
@@ -32,9 +32,23 @@ const columns = [
     format: (value) => value.toLocaleString("en-IN"),
   },
   {
+    id: "mrp",
+    label: "MRP",
+    minWidth: 100,
+    align: "right",
+    format: (value) => value.toLocaleString("en-IN"),
+  },
+  {
     id: "qty",
     label: "Total qty",
     minWidth: 50,
+    align: "right",
+    format: (value) => value.toLocaleString("en-IN"),
+  },
+  {
+    id: "total",
+    label: "Amount",
+    minWidth: 100,
     align: "right",
     format: (value) => value.toLocaleString("en-IN"),
   },
@@ -90,6 +104,13 @@ function SalesReports() {
       <Grid item xs={12}>
         <DataTable rows={rows} columns={columns} />
       </Grid>
+      <Typography variant="h5" align="right">
+        Total Amount:{" "}
+        {parseFloat(rows.reduce(
+          (a, b) => parseFloat(a) + parseFloat(b.total),
+          0
+        )).toFixed(2)}
+      </Typography>
     </Grid>
   );
 }
