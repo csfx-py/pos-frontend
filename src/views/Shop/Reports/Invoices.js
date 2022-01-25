@@ -4,6 +4,7 @@ import DataTable from "../../../Components/DataTable";
 import { ShopDataContext } from "../../../Contexts/ShopDataContext";
 import { UtilityContext } from "../../../Contexts/UtilityContext";
 import printInvoice from "../../../utils/printInvoice";
+import printInvoiceReport from "../../../utils/printInvoiceReport";
 
 const columns = [
   {
@@ -59,6 +60,7 @@ const columns = [
 function Invoices() {
   const [rows, setRows] = useState([]);
   const [invoices, setInvoices] = useState([]);
+  const [reportRows, setReportRows] = useState([]);
 
   const [salesNum, setSalesNum] = useState("");
   const [sDate, setSDate] = useState("");
@@ -121,6 +123,10 @@ function Invoices() {
     printInvoice(grouped, shopDetails);
   };
 
+  const handlePrintReport = async (e) => {
+    printInvoiceReport(reportRows, shopDetails);
+  };
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -154,11 +160,15 @@ function Invoices() {
                 // check if sDate and eDate are not empty
                 if (sDate && eDate) {
                   // fetch invoices
-                  const invoices = await fetchInvoices(sDate, eDate);
+                  const { invoices, invoiceReports } = await fetchInvoices(
+                    sDate,
+                    eDate
+                  );
                   // set rows
                   setRows(invoices);
                   // set invoices
                   setInvoices(invoices);
+                  setReportRows(invoiceReports);
                 }
               }}
             >
@@ -199,7 +209,7 @@ function Invoices() {
               Print
             </Button>
           </Grid>
-          <Grid item xs={6} />
+          <Grid item xs={4} />
           <Grid item xs={2}>
             <Button
               variant="contained"
@@ -212,7 +222,22 @@ function Invoices() {
               }}
               fullWidth
             >
-              Print Generated
+              Print Invoices
+            </Button>
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={async (e) => {
+                if (rows.length > 0) {
+                  return await handlePrintReport(e);
+                }
+                toast("No invoices to print", "error");
+              }}
+              fullWidth
+            >
+              Print Report
             </Button>
           </Grid>
         </Grid>
