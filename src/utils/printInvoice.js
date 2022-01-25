@@ -72,7 +72,7 @@ const printInvoice = async (sales_rows, shopDetails) => {
       padding: 0 5px;
     }
     
-    td:not(:first-child) {
+    td:not(nth-child(2)) {
       text-align: right;
     }
     
