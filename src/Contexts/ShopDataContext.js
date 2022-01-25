@@ -104,19 +104,7 @@ export const ShopDataProvider = ({ children }) => {
         });
 
         if (res && res.data) {
-          const newData = res.data.purchase.map((datum) => ({
-            ...datum,
-            total: (
-              datum.price *
-              (parseInt(datum.qty_card || 0) +
-                parseInt(datum.qty_cash || 0) +
-                parseInt(datum.qty_upi || 0))
-            ).toLocaleString("en-IN", {
-              maximumFractionDigits: 2,
-              currency: "INR",
-            }),
-          }));
-          return [...newData];
+          return [...res.data.purchase];
         }
 
         return [];
@@ -137,11 +125,18 @@ export const ShopDataProvider = ({ children }) => {
         });
 
         if (res && res.data) {
-          const newData = res.data.invoices.map((datum) => ({
+          const newInvoices = res.data.invoices.map((datum) => ({
             ...datum,
             invoice_date: new Date(datum.invoice_date).toLocaleDateString(),
           }));
-          return [...newData];
+          const newReport = res.data.invoiceReports.map((datum) => ({
+            ...datum,
+            invoice_date: new Date(datum.invoice_date).toLocaleDateString(),
+          }));
+          return {
+            invoices: [...newInvoices],
+            invoiceReports: [...newReport],
+          };
         }
 
         return [];
@@ -171,17 +166,17 @@ export const ShopDataProvider = ({ children }) => {
           const purchase = res.data.purchase.map((datum) => ({
             ...datum,
             type: "purchase",
-            qty: "+" + datum.qty,
+            qty: parseInt(datum.qty),
             date: new Date(datum.purchase_date).toLocaleDateString(),
           }));
           const sales = res.data.sales.map((datum) => ({
             ...datum,
             type: "sales",
-            qty: "-" + datum.qty,
+            qty: parseInt(datum.qty),
             date: new Date(datum.sales_date).toLocaleDateString(),
           }));
 
-          const merged = [op, ...purchase, ...sales];
+          let merged = [...purchase, ...sales];
 
           // sort merged according to date
           merged.sort((a, b) => {
@@ -190,7 +185,25 @@ export const ShopDataProvider = ({ children }) => {
             return 0;
           });
 
-          return [...merged];
+          merged.unshift(op);
+
+          let cumulative = 0;
+          // add closing stock
+          const test = merged.map((item) => {
+            if (item.type === "opening") {
+              item.close = "N/A";
+              cumulative = item.qty;
+            } else if (item.type === "purchase") {
+              item.close = cumulative + item.qty;
+              cumulative += item.qty;
+            } else if (item.type === "sales") {
+              item.close = cumulative - item.qty;
+              cumulative -= item.qty;
+            }
+            return item;
+          });
+
+          return [...test];
         }
         return [];
       }
@@ -210,6 +223,7 @@ export const ShopDataProvider = ({ children }) => {
         });
 
         if (res && res.data) {
+          console.log(res.data);
           return res.data;
         }
         return [];
