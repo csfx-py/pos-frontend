@@ -113,7 +113,7 @@ function Shop() {
           item.sellQty += 1;
           item.total += parseFloat(row.mrp) - parseFloat(row.discount);
         } else {
-          newRows.push({
+          newRows.unshift({
             products_id: row.products_id,
             products_name: row.products_name,
             sellQty: 1,
@@ -285,7 +285,7 @@ function Shop() {
 
                         if (sales_no) {
                           // print invoices
-                          const invoices = await fetchInvoices(
+                          const { invoices } = await fetchInvoices(
                             new Date(),
                             new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
                           );
