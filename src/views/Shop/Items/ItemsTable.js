@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { MasterDataContext } from "../../../Contexts/MasterDataContext";
 import { ShopDataContext } from "../../../Contexts/ShopDataContext";
 import {
+  Button,
   Grid,
   makeStyles,
   Paper,
@@ -10,6 +11,7 @@ import {
 } from "@material-ui/core";
 import DataTable from "../../../Components/DataTable";
 import FilterSelect from "../../../Components/FilterSelect";
+import printRows from "../../../utils/printRows";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -129,6 +131,20 @@ function ItemsTable() {
       </Grid>
       <Grid item xs={12}>
         <DataTable rows={rows} columns={columns} />
+      </Grid>
+      <iframe
+        title="invoice"
+        id="dsr-print"
+        style={{ height: "0px", width: "0px", position: "absolute" }}
+      ></iframe>
+      <Grid item xs={2}>
+        <Button variant="contained" color="primary" onClick={async (e) => {
+          if (rows.length > 0) {
+            printRows(rows)
+          }
+        }}>
+          Print Report
+        </Button>
       </Grid>
     </Grid>
   );
