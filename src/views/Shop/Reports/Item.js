@@ -24,6 +24,12 @@ const columns = [
     minWidth: 170,
     align: "right",
   },
+  {
+    id: "close",
+    label: "Closing",
+    minWidth: 170,
+    align: "right",
+  },
 ];
 
 function Item() {
@@ -48,10 +54,6 @@ function Item() {
             options={shopItems}
             onChange={async (event, value) => {
               setPid(value?.products_id || pid);
-              const ele = ACRef.current.getElementsByClassName(
-                "MuiAutocomplete-clearIndicator"
-              )[0];
-              if (ele) ele.click();
             }}
             getOptionLabel={(option) =>
               `${option.products_name}${
@@ -94,6 +96,10 @@ function Item() {
             onClick={async (e) => {
               if (sDate && eDate) {
                 setRows(await fetchItemReport(pid, sDate, eDate));
+                const ele = ACRef.current.getElementsByClassName(
+                  "MuiAutocomplete-clearIndicator"
+                )[0];
+                if (ele) ele.click();
               } else {
                 toast("Please select start and end date", "error");
               }
