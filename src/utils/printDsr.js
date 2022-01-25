@@ -50,7 +50,7 @@ const printDsr = async (rows, date, shopDetails) => {
         }
     
         th:first-child {
-          width: 50%;
+          width: 35%;
         }
         
         td {
