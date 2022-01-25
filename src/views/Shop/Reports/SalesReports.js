@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import DataTable from "../../../Components/DataTable";
 import { ShopDataContext } from "../../../Contexts/ShopDataContext";
 import { UtilityContext } from "../../../Contexts/UtilityContext";
+import printSales from "../../../utils/printSales";
 
 const columns = [
   {
@@ -32,16 +33,16 @@ const columns = [
     format: (value) => value.toLocaleString("en-IN"),
   },
   {
-    id: "mrp",
-    label: "MRP",
-    minWidth: 100,
+    id: "qty",
+    label: "Total qty",
+    minWidth: 50,
     align: "right",
     format: (value) => value.toLocaleString("en-IN"),
   },
   {
-    id: "qty",
-    label: "Total qty",
-    minWidth: 50,
+    id: "mrp",
+    label: "MRP",
+    minWidth: 100,
     align: "right",
     format: (value) => value.toLocaleString("en-IN"),
   },
@@ -100,17 +101,35 @@ function SalesReports() {
             Generate Report
           </Button>
         </Grid>
+        {console.log(rows)}
+        <Grid item xs={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={async (e) => {
+              if (rows.length) {
+                printSales(rows);
+              }
+            }}
+          >
+            Print Report
+          </Button>
+        </Grid>
       </Grid>
       <Grid item xs={12}>
         <DataTable rows={rows} columns={columns} />
       </Grid>
       <Typography variant="h5" align="right">
         Total Amount:{" "}
-        {parseFloat(rows.reduce(
-          (a, b) => parseFloat(a) + parseFloat(b.total),
-          0
-        )).toFixed(2)}
+        {parseFloat(
+          rows.reduce((a, b) => parseFloat(a) + parseFloat(b.total), 0)
+        ).toFixed(2)}
       </Typography>
+      <iframe
+        title="invoice"
+        id="dsr-print"
+        style={{ height: "0px", width: "0px", position: "absolute" }}
+      ></iframe>
     </Grid>
   );
 }
