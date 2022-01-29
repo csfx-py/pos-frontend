@@ -75,7 +75,7 @@ function AddItem() {
     <Paper className={classes.root}>
       <form onSubmit={handleSubmit}>
         <Typography variant="h5" component="h2" gutterBottom>
-          Add a Size
+          Add Item
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={3}>
@@ -93,7 +93,7 @@ function AddItem() {
             <InputLabel color="secondary">Category</InputLabel>
             <Select
               color="secondary"
-              name="category"
+              name="categories_id"
               value={formControlState.categories_id}
               onChange={handleChange}
               fullWidth
@@ -258,138 +258,6 @@ function AddItem() {
         </Grid>
       </form>
     </Paper>
-
-    //       <FormControl className={classes.formControl}>
-    //
-    //         <FormHelperText>Select size</FormHelperText>
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <InputLabel color="secondary">Brand</InputLabel>
-    //         <Select
-    //           color="secondary"
-    //           name="brand"
-    //           value={formControlState.brand}
-    //           onChange={handleChange}
-    //           required
-    //         >
-    //           {brands.map((brand) => (
-    //             <MenuItem key={brand} value={brand}>
-    //               {brand}
-    //             </MenuItem>
-    //           ))}
-    //         </Select>
-    //         <FormHelperText>Select brand</FormHelperText>
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="Barcode"
-    //           value={formControlState.barcode}
-    //           name="barcode"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //         />
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="Purchase price"
-    //           value={formControlState.purchase_price}
-    //           name="purchase_price"
-    //           type="number"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //           required
-    //         />
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="Case qty"
-    //           value={formControlState.case_qty}
-    //           name="case_qty"
-    //           type="number"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //           required
-    //         />
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="Case price"
-    //           value={formControlState.case_price}
-    //           name="case_price"
-    //           type="number"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //           required
-    //         />
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="MRP"
-    //           value={formControlState.mrp}
-    //           name="mrp"
-    //           type="number"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //           required
-    //         />
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="MRP1"
-    //           value={formControlState.mrp1}
-    //           name="mrp1"
-    //           type="number"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //         />
-    //         <FormHelperText>Leave 0 for empty value</FormHelperText>
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="MRP2"
-    //           value={formControlState.mrp2}
-    //           name="mrp2"
-    //           type="number"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //         />
-    //         <FormHelperText>Leave 0 for empty value</FormHelperText>
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="MRP3"
-    //           value={formControlState.mrp3}
-    //           name="mrp3"
-    //           type="number"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //         />
-    //         <FormHelperText>Leave 0 for empty value</FormHelperText>
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <TextField
-    //           label="MRP4"
-    //           value={formControlState.mrp4}
-    //           name="mrp4"
-    //           type="number"
-    //           onChange={handleChange}
-    //           color="secondary"
-    //         />
-    //         <FormHelperText>Leave 0 for empty value</FormHelperText>
-    //       </FormControl>
-    //       <FormControl className={classes.formControl}>
-    //         <Button
-    //           variant="contained"
-    //           color="secondary"
-    //           size="large"
-    //           type="submit"
-    //         >
-    //           Submit
-    //         </Button>
-    //       </FormControl>
-    //     </form>
-    //   </Paper>
-    // </Grid>
   );
 }
 
