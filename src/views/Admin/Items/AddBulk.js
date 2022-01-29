@@ -93,7 +93,7 @@ function AddBulk() {
     <Paper elevation={2} className={classes.root}>
       <form onSubmit={handleSubmit}>
         <Typography variant="h5" component="h2" gutterBottom>
-          Add a Brand
+          Add Items in Bulk
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={3}>
