@@ -1,5 +1,5 @@
 import { Button, Grid, Input, InputLabel, TextField } from "@material-ui/core";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import DataTable from "../../../Components/DataTable";
 import { ShopDataContext } from "../../../Contexts/ShopDataContext";
 import { UtilityContext } from "../../../Contexts/UtilityContext";
@@ -111,13 +111,6 @@ function Invoices() {
           rows: [inv],
         });
       }
-    });
-
-    // sort grouped array by getting last digits of invoice_number
-    grouped.sort((a, b) => {
-      const inm = a.invoice_number.split("-");
-      const inb = b.invoice_number.split("-");
-      return parseInt(inm[inm.length - 1]) - parseInt(inb[inb.length - 1]);
     });
 
     printInvoice(grouped, shopDetails);

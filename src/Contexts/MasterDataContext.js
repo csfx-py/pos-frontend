@@ -13,7 +13,6 @@ export const MasterDataProvider = ({ children }) => {
   const [sizes, setSizes] = useState([]);
   const [brands, setBrands] = useState([]);
   const [items, setItems] = useState([]);
-  const [users, setUsers] = useState([]);
   const [changesMade, setChangesMade] = useState(0);
 
   const fetchBrands = async () => {
