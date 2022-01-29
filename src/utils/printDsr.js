@@ -1,7 +1,7 @@
 const printDsr = async (rows, date, shopDetails) => {
   const rowsToPrintSplit = [];
-  for (let i = 0; i < rows.length; i += 35) {
-    rowsToPrintSplit.push(rows.slice(i, i + 35));
+  for (let i = 0; i < rows.length; i += 40) {
+    rowsToPrintSplit.push(rows.slice(i, i + 40));
   }
   const pri = document.getElementById("dsr-print").contentWindow;
   pri.document.open();
@@ -24,7 +24,7 @@ const printDsr = async (rows, date, shopDetails) => {
         }
           
         .page {
-          padding: 10px;
+          padding: 20px;
           width: 21cm;
           height: 295mm;
           display: flex;
@@ -50,11 +50,24 @@ const printDsr = async (rows, date, shopDetails) => {
         }
     
         th:first-child {
-          width: 35%;
+          width: 43%;
+        }
+
+        th:nth-child(2) {
+          width: 7%;
+        }
+
+        th:nth-child(3) {
+          width: 7%;
+        }
+
+        th:last-child {
+          width: 12%;
         }
         
         td {
           padding: 0 5px;
+          font-size: 15px;
         }
         
         td:not(:first-child) {

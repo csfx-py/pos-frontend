@@ -24,7 +24,7 @@ const printInvoiceReport = async (rows, shopDetails) => {
           }
             
           .page {
-            padding: 10px;
+            padding: 20px;
             width: 21cm;
             height: 295mm;
             display: flex;

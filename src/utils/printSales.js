@@ -24,7 +24,7 @@ const printSales = async (rows) => {
               }
                 
               .page {
-                padding: 10px;
+                padding: 20px;
                 width: 21cm;
                 height: 295mm;
                 display: flex;
@@ -50,7 +50,23 @@ const printSales = async (rows) => {
               }
           
               th:first-child {
-                width: 35%;
+                width: 45%;
+              }
+
+              th:nth-child(2) {
+                width: 7%;
+              }
+
+              th:nth-child(3) {
+                width: 7%;
+              }
+              
+              th:nth-child(4) {
+                width: 7%;
+              }
+
+              th:nth-child(5) {
+                width: 7%;
               }
               
               td {

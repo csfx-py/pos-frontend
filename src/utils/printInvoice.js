@@ -16,7 +16,7 @@ const printInvoice = async (sales_rows, shopDetails) => {
       }
         
     .page {
-      padding: 10px;
+      padding: 20px;
       width: 21cm;
       height: calc(297mm / 3);
       display: flex;
@@ -85,11 +85,6 @@ const printInvoice = async (sales_rows, shopDetails) => {
       .page, .page * {
         visibility: visible;
       }
-
-      // .page {
-      //   clear: both;
-      //   page-break-after: always;
-      // }
     }
     </style>
     </head>
@@ -109,7 +104,7 @@ const printInvoice = async (sales_rows, shopDetails) => {
       <div class="page">
       <div class="info">
         <p><b>${shopDetails.name}</b></p>
-        <p>| <b>Veerabhadra Prasanna</b> |</p>
+        <p>|| <b>Veerabhadra Prasanna</b> ||</p>
       </div>
       <div class="info">
         <p><b>${shopDetails.address}</b></p>
