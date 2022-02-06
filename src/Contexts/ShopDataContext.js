@@ -146,6 +146,32 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
+  const fetchExcel = async (sDate) => {
+    try {
+      const { success, shops_id } = await refresh();
+      if (success) {
+        const res = await API.post("shop/excel-report", {
+          shops_id: shops_id[0],
+          sDate,
+        });
+
+        if (res && res.data) {
+          const newData = res.data.sales.map((datum) => ({
+            ...datum,
+            mrp: parseFloat(datum.mrp).toFixed(2),
+            total: parseFloat(datum.total).toFixed(2),
+            range: `${res.data.range[1].invoice_number} to ${res.data.range[0].invoice_number}`,
+          }));
+          return [...newData];
+        }
+
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
+  };
+
   const fetchItemReport = async (pid, sDate, eDate) => {
     try {
       const { success, shops_id } = await refresh();
@@ -203,13 +229,17 @@ export const ShopDataProvider = ({ children }) => {
             return item;
           });
 
-          return [...test];
+          return {
+            txns: [...test],
+            purchases: purchase.reduce((a, b) => a + b.qty, 0),
+            sales: sales.reduce((a, b) => a + b.qty, 0),
+          };
         }
-        return [];
+        return { txns: [], purchases: 0, sales: 0 };
       }
-      return [];
+      return { txns: [], purchases: 0, sales: 0 };
     } catch (error) {
-      return [];
+      return { txns: [], purchases: 0, sales: 0 };
     }
   };
 
@@ -408,6 +438,7 @@ export const ShopDataProvider = ({ children }) => {
         fetchInvoices,
         fetchItemReport,
         fetchDsr,
+        fetchExcel,
       }}
     >
       {children}
