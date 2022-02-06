@@ -1,4 +1,11 @@
-import { Button, Grid, Input, InputLabel, TextField } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  Input,
+  InputLabel,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useContext, useRef, useState } from "react";
 import DataTable from "../../../Components/DataTable";
@@ -34,6 +41,10 @@ const columns = [
 
 function Item() {
   const [rows, setRows] = useState([]);
+  const [total, setTotal] = useState({
+    purchases: 0,
+    sales: 0,
+  });
   const [pid, setPid] = useState("");
   const [sDate, setSDate] = useState("");
   const [eDate, setEDate] = useState("");
@@ -95,7 +106,13 @@ function Item() {
             color="primary"
             onClick={async (e) => {
               if (sDate && eDate) {
-                setRows(await fetchItemReport(pid, sDate, eDate));
+                const { txns, purchases, sales } = await fetchItemReport(
+                  pid,
+                  sDate,
+                  eDate
+                );
+                setRows(txns);
+                setTotal({ purchases, sales });
                 const ele = ACRef.current.getElementsByClassName(
                   "MuiAutocomplete-clearIndicator"
                 )[0];
@@ -112,6 +129,12 @@ function Item() {
       <Grid item xs={12}>
         <DataTable rows={rows} columns={columns} />
       </Grid>
+      <Typography variant="h6" gutterBottom>
+        Total Purchase: {total.purchases}
+      </Typography>
+      <Typography variant="h6" gutterBottom>
+        Total Sales: {total.sales}
+      </Typography>
     </Grid>
   );
 }
