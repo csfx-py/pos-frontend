@@ -101,7 +101,6 @@ function SalesReports() {
             Generate Report
           </Button>
         </Grid>
-        {console.log(rows)}
         <Grid item xs={2}>
           <Button
             variant="contained"
