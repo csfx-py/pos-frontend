@@ -156,15 +156,22 @@ export const ShopDataProvider = ({ children }) => {
         });
 
         if (res && res.data) {
+          const from =
+            res.data.range[1].invoice_number.split("-")[
+              res.data.range[1].invoice_number.split("-").length - 1
+            ];
+          const to =
+            res.data.range[0].invoice_number.split("-")[
+              res.data.range[0].invoice_number.split("-").length - 1
+            ];
           const newData = res.data.sales.map((datum) => ({
             ...datum,
             mrp: parseFloat(datum.mrp).toFixed(2),
             total: parseFloat(datum.total).toFixed(2),
-            range: `${res.data.range[1].invoice_number} to ${res.data.range[0].invoice_number}`,
+            range: `${from} to ${to}`,
           }));
           return [...newData];
         }
-
         return [];
       }
     } catch (error) {
