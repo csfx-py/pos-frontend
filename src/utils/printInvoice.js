@@ -131,7 +131,7 @@ const printInvoice = async (sales_rows, shopDetails) => {
                   .map(
                     (row, index) => `
                 <tr>
-                  <td>${index}</td>
+                  <td>${index+1}</td>
                   <td>${row.name}</td>
                   <td>${parseFloat(row.price).toFixed(2)}</td>
                   <td>${row.qty}</td>
