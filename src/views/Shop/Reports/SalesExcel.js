@@ -43,6 +43,7 @@ const columns = [
 const SalesExcel = () => {
   const [sDate, setSDate] = useState("");
   const [rows, setRows] = useState([]);
+  const [txnType, setTxnType] = useState("Cash");
 
   const [sheetData, setSheetData] = useState({
     data: [],
@@ -93,13 +94,32 @@ const SalesExcel = () => {
             />
           </Grid>
           <Grid item xs={2}>
+            <InputLabel>Transaction Type</InputLabel>
+            <TextField
+              select
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={txnType}
+              onChange={(event) => {
+                setTxnType(event.target.value);
+              }}
+            >
+              <MenuItem value="Cash">Cash</MenuItem>
+              {["Card", "UPI"].map((datum, index) => (
+                <MenuItem key={index} value={datum}>
+                  {datum}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={2}>
             <Button
               variant="contained"
               color="primary"
               onClick={async (e) => {
-                console.log("trig");
                 if (sDate) {
-                  const res = await fetchExcel(sDate);
+                  const res = await fetchExcel(sDate, txnType);
                   setRows(res);
                   const data = res.map((item) => {
                     return [
@@ -151,8 +171,8 @@ const SalesExcel = () => {
                     sheetData.cols,
                     ...sheetData.data,
                   ]);
-                  XLSX.utils.book_append_sheet(wb, ws, "Sales");
-                  XLSX.writeFile(wb, "Sales.xlsx", {
+                  XLSX.utils.book_append_sheet(wb, ws, `Sales-${txnType}`);
+                  XLSX.writeFile(wb, `Sales-${txnType}.xlsx`, {
                     bookType: "xlsx",
                     type: "binary",
                   });
