@@ -146,23 +146,24 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
-  const fetchExcel = async (sDate) => {
+  const fetchExcel = async (sDate, txnType) => {
     try {
       const { success, shops_id } = await refresh();
       if (success) {
         const res = await API.post("shop/excel-report", {
           shops_id: shops_id[0],
           sDate,
+          txnType,
         });
 
         if (res && res.data) {
           const from =
             res.data.range[1].invoice_number.split("-")[
-              res.data.range[1].invoice_number.split("-").length - 1
+            res.data.range[1].invoice_number.split("-").length - 1
             ];
           const to =
             res.data.range[0].invoice_number.split("-")[
-              res.data.range[0].invoice_number.split("-").length - 1
+            res.data.range[0].invoice_number.split("-").length - 1
             ];
           const newData = res.data.sales.map((datum) => ({
             ...datum,
