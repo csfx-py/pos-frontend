@@ -135,7 +135,7 @@ const SalesExcel = () => {
                       "Sales",
                       sDate,
                       "",
-                      "Cash",
+                      txnType,
                       "",
                       "",
                       "Karnataka",
